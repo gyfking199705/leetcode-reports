@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#198 打家劫舍 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h2>🎯 LeetCode 精讲 #198 - 打家劫舍</h2>
+<hr>
+<h3>📋 题目描述</h3>
+<p><strong>来源</strong>: LeetCode 第198题<br><strong>难度</strong>: Medium<br><strong>链接</strong>: <a href="https://leetcode.cn/problems/house-robber/">https://leetcode.cn/problems/house-robber/</a></p>
+<h4>题目原文</h4>
+<blockquote>
+<p>你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，<strong>如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警</strong>。</p>
+<p>给定一个代表每个房屋存放金额的非负整数数组，计算你 <strong>不触动警报装置的情况下</strong> ，今晚能够偷窃到的最高金额。</p>
+</blockquote>
+<h4>示例</h4>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: [1,2,3,1]
+输出: 4
+解释: 偷窃 1 号房屋 (金额 = 1) ，然后偷窃 3 号房屋 (金额 = 3)。
+     偷窃到的最高金额 = 1 + 3 = 4 。
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: [2,7,9,3,1]
+输出: 12
+解释: 偷窃 1 号房屋 (金额 = 2), 偷窃 3 号房屋 (金额 = 9)，接着偷窃 5 号房屋 (金额 = 1)。
+     偷窃到的最高金额 = 2 + 9 + 1 = 12 。
+</code></pre>
+<h4>约束条件</h4>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 100</code></li>
+<li><code>0 &lt;= nums[i] &lt;= 400</code></li>
+</ul>
+<hr>
+<h3>💡 解题思路</h3>
+<h4>核心思想：动态规划</h4>
+<p>这道题是<strong>动态规划</strong>的经典入门题，展示了DP最核心的思想：<strong>状态定义</strong> + <strong>状态转移方程</strong>。</p>
+<h4>第一步：定义状态</h4>
+<p>设 <code>dp[i]</code> 表示：<strong>偷窃前 i 间房屋能获得的最高金额</strong>（第 i 间可选可不选）</p>
+<h4>第二步：状态转移分析</h4>
+<p>对于第 <code>i</code> 间房屋，小偷有两个选择：</p>
+<table>
+<thead>
+<tr>
+<th>选择</th>
+<th>条件</th>
+<th>获得金额</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>偷第 i 间</strong></td>
+<td>不能偷第 i-1 间</td>
+<td><code>nums[i] + dp[i-2]</code></td>
+</tr>
+<tr>
+<td><strong>不偷第 i 间</strong></td>
+<td>可以偷第 i-1 间</td>
+<td><code>dp[i-1]</code></td>
+</tr>
+</tbody></table>
+<p><strong>为什么偷第 i 间时要加 dp[i-2]？</strong></p>
+<ul>
+<li>因为相邻房屋不能同时偷，如果偷了第 i 间，第 i-1 间就不能偷</li>
+<li>所以只能从第 i-2 间及之前的最佳状态转移过来</li>
+</ul>
+<h4>第三步：状态转移方程</h4>
+<pre><code>dp[i] = max(dp[i-1], nums[i] + dp[i-2])
+        ↑偷i-1不偷i    ↑偷i，加上i-2的最佳值
+</code></pre>
+<h4>第四步：初始化与边界</h4>
+<ul>
+<li><code>dp[0] = nums[0]</code>（只有一间房，只能偷它）</li>
+<li><code>dp[1] = max(nums[0], nums[1])</code>（两间房，偷金额大的那间）</li>
+</ul>
+<hr>
+<h3>📝 代码实现</h3>
+<h4>方法一：标准动态规划（空间复杂度 O(n)）</h4>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def rob(self, nums: List[int]) -&gt; int:
+        n = len(nums)
+        if n == 0:
+            return 0
+        if n == 1:
+            return nums[0]
+        
+        # dp[i] 表示偷到第i间房屋时的最大金额
+        dp = [0] * n
+        dp[0] = nums[0]
+        dp[1] = max(nums[0], nums[1])
+        
+        for i in range(2, n):
+            # 状态转移：要么不偷第i间（继承dp[i-1]），要么偷第i间（nums[i] + dp[i-2]）
+            dp[i] = max(dp[i-1], nums[i] + dp[i-2])
+        
+        return dp[n-1]
+</code></pre>
+<h4>方法二：空间优化版（空间复杂度 O(1)）</h4>
+<p>观察状态转移方程 <code>dp[i] = max(dp[i-1], nums[i] + dp[i-2])</code>，发现每次只依赖前两个状态，可以用滚动变量优化：</p>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def rob(self, nums: List[int]) -&gt; int:
+        n = len(nums)
+        if n == 0:
+            return 0
+        if n == 1:
+            return nums[0]
+        
+        # 只用两个变量记录前两个状态
+        prev2 = nums[0]  # dp[i-2]
+        prev1 = max(nums[0], nums[1])  # dp[i-1]
+        
+        for i in range(2, n):
+            # 计算当前状态
+            curr = max(prev1, nums[i] + prev2)
+            # 滚动更新
+            prev2 = prev1
+            prev1 = curr
+        
+        return prev1
+</code></pre>
+<h4>方法三：最简写法</h4>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def rob(self, nums: List[int]) -&gt; int:
+        prev2, prev1 = 0, 0  # dp[i-2], dp[i-1]
+        
+        for num in nums:
+            # 当前最优 = max(不偷当前, 偷当前+前前最优)
+            curr = max(prev1, num + prev2)
+            prev2 = prev1
+            prev1 = curr
+        
+        return prev1
+</code></pre>
+<hr>
+<h3>🔍 详细示例分析</h3>
+<p>以 <code>nums = [2, 7, 9, 3, 1]</code> 为例：</p>
+<pre><code>房屋:    0    1    2    3    4
+金额:    2    7    9    3    1
+
+初始化: prev2 = 0, prev1 = 0
+
+i=0 (金额2):
+  curr = max(0, 2+0) = 2
+  prev2 = 0, prev1 = 2
+  → 偷第0间，获得2
+
+i=1 (金额7):
+  curr = max(2, 7+0) = 7
+  prev2 = 2, prev1 = 7
+  → 不偷第0间，偷第1间，获得7
+
+i=2 (金额9):
+  curr = max(7, 9+2) = 11
+  prev2 = 7, prev1 = 11
+  → 偷第0间和第2间，获得2+9=11
+
+i=3 (金额3):
+  curr = max(11, 3+7) = 11
+  prev2 = 11, prev1 = 11
+  → 保持原方案，不偷第3间
+
+i=4 (金额1):
+  curr = max(11, 1+11) = 12
+  prev2 = 11, prev1 = 12
+  → 偷第0、2、4间，获得2+9+1=12
+
+最终结果: 12 ✓
+</code></pre>
+<hr>
+<h3>📊 复杂度分析</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>标准DP</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>需要dp数组存储所有状态</td>
+</tr>
+<tr>
+<td>空间优化</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>只需两个变量滚动存储</td>
+</tr>
+</tbody></table>
+<p><strong>最优解法</strong>: 空间优化版，时间 O(n)，空间 O(1)</p>
+<hr>
+<h3>🎓 关键要点总结</h3>
+<h4>1. DP三要素</h4>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>状态定义</strong></td>
+<td><code>dp[i]</code> = 前i间房屋能偷到的最大金额</td>
+</tr>
+<tr>
+<td><strong>转移方程</strong></td>
+<td><code>dp[i] = max(dp[i-1], nums[i] + dp[i-2])</code></td>
+</tr>
+<tr>
+<td><strong>初始状态</strong></td>
+<td><code>dp[0]=nums[0], dp[1]=max(nums[0],nums[1])</code></td>
+</tr>
+</tbody></table>
+<h4>2. 为什么这样定义状态？</h4>
+<ul>
+<li>问题问的是&quot;最高金额&quot;，所以状态定义为&quot;最大金额&quot;</li>
+<li>约束条件是&quot;不能偷相邻&quot;，所以转移时要考虑间隔一位</li>
+</ul>
+<h4>3. 空间优化技巧</h4>
+<ul>
+<li>如果状态转移只依赖固定的前几个状态，可以用滚动变量代替数组</li>
+<li>本题只依赖 <code>dp[i-1]</code> 和 <code>dp[i-2]</code>，所以用两个变量即可</li>
+</ul>
+<hr>
+<h3>🔗 类似题目</h3>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>标题</th>
+<th>难度</th>
+<th>关联说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://leetcode.cn/problems/house-robber-ii/">213</a></td>
+<td>打家劫舍 II</td>
+<td>Medium</td>
+<td>房屋排成<strong>环形</strong>，首尾相邻</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/house-robber-iii/">337</a></td>
+<td>打家劫舍 III</td>
+<td>Medium</td>
+<td>房屋排成<strong>二叉树</strong>结构</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/delete-and-earn/">740</a></td>
+<td>删除并获得点数</td>
+<td>Medium</td>
+<td>转换后可转化为打家劫舍</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/house-robber-iv/">2560</a></td>
+<td>打家劫舍 IV</td>
+<td>Medium</td>
+<td>带约束条件的变种</td>
+</tr>
+</tbody></table>
+<p><strong>进阶路径</strong>:</p>
+<pre><code>打家劫舍(198) → 打家劫舍II(213) → 打家劫舍III(337)
+      ↓
+删除并获得点数(740) → 二叉树的最大独立集
+</code></pre>
+<hr>
+<h3>🎯 面试高频考点</h3>
+<ol>
+<li><p><strong>为什么选择 max(dp[i-1], nums[i] + dp[i-2])？</strong></p>
+<ul>
+<li>这是&quot;选或不选&quot;的经典DP思想</li>
+<li>不选第i间：继承dp[i-1]</li>
+<li>选第i间：必须放弃i-1，所以是nums[i] + dp[i-2]</li>
+</ul>
+</li>
+<li><p><strong>空间复杂度能否进一步优化？</strong></p>
+<ul>
+<li>已经最优 O(1)，因为必须遍历一遍数组</li>
+</ul>
+</li>
+<li><p><strong>如果房屋是环形排列怎么办？</strong></p>
+<ul>
+<li>参考打家劫舍II：分两种情况（偷第一家/不偷第一家）分别计算</li>
+</ul>
+</li>
+<li><p><strong>如何输出具体的偷窃方案（哪些房屋被偷）？</strong></p>
+<ul>
+<li>需要额外记录选择路径，或者用回溯法从dp数组反推</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3>💡 举一反三：状态机DP</h3>
+<p>打家劫舍本质是一个简单的<strong>状态机</strong>：</p>
+<pre><code>状态0: 上一间没被偷 → 当前可选偷/不偷
+状态1: 上一间被偷了 → 当前只能不偷
+
+转移:
+  状态0 → 状态0 (当前不偷)
+  状态0 → 状态1 (当前偷)
+  状态1 → 状态0 (当前不偷)
+  状态1 → 状态1 (不允许，相邻不能偷)
+</code></pre>
+<p>这种视角有助于理解更复杂的DP问题。</p>
+<hr>
+<p><strong>总结</strong>: LeetCode 198 是动态规划的入门经典，核心在于理解&quot;状态定义&quot;和&quot;状态转移方程&quot;。记住这个模式：&quot;选或不选&quot;取max，相邻约束用 i-2。掌握这道题后，可以顺利过渡到打家劫舍II、III等进阶题目。</p>
+<hr>
+<p><em>生成时间: 2026-03-15 11:16</em><br><em>题号: #198 - 打家劫舍</em></p>
+
+    </div>
+  </div>
+  
+</body>
+</html>
