@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#33 搜索旋转排序数组 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h2>🎯 LeetCode 精讲 #33 - 搜索旋转排序数组</h2>
+<hr>
+<h3>📋 题目描述</h3>
+<p><strong>原题链接</strong>: <a href="https://leetcode.cn/problems/search-in-rotated-sorted-array/">https://leetcode.cn/problems/search-in-rotated-sorted-array/</a></p>
+<p>整数数组 <code>nums</code> 按升序排列，数组中的值 <strong>互不相同</strong>。</p>
+<p>在传递给函数之前，<code>nums</code> 在预先未知的某个下标 <code>k</code>（<code>0 &lt;= k &lt; nums.length</code>）上进行了 <strong>旋转</strong>，使数组变为 <code>[nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]]</code>（下标 <strong>从 0 开始</strong> 计数）。</p>
+<p>给你 <strong>旋转后</strong> 的数组 <code>nums</code> 和一个整数 <code>target</code> ，如果 <code>nums</code> 中存在这个目标值 <code>target</code> ，则返回它的下标，否则返回 <code>-1</code> 。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：nums = [4,5,6,7,0,1,2], target = 0
+输出：4
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：nums = [4,5,6,7,0,1,2], target = 3
+输出：-1
+</code></pre>
+<p><strong>示例 3：</strong></p>
+<pre><code>输入：nums = [1], target = 0
+输出：-1
+</code></pre>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 5000</code></li>
+<li><code>-10^4 &lt;= nums[i] &lt;= 10^4</code></li>
+<li><code>nums</code> 中的每个值都 <strong>独一无二</strong></li>
+<li>题目数据保证 <code>nums</code> 在预先未知的某个下标上进行了旋转</li>
+<li><code>-10^4 &lt;= target &lt;= 10^4</code></li>
+</ul>
+<p><strong>进阶：</strong> 你可以设计一个时间复杂度为 <code>O(log n)</code> 的解决方案吗？</p>
+<hr>
+<h3>💡 解题思路</h3>
+<h4>核心观察 🔍</h4>
+<p>这道题是二分查找的经典变种。旋转后的数组虽然整体无序，但有一个关键性质：</p>
+<blockquote>
+<p><strong>将数组从中间分开，一定有一半是有序的，另一半可能有序也可能无序</strong></p>
+</blockquote>
+<p>例如：<code>[4,5,6,7,0,1,2]</code></p>
+<ul>
+<li>从中间分开：<code>[4,5,6,7]</code> 和 <code>[0,1,2]</code></li>
+<li>左边 <code>[4,5,6,7]</code> 是有序的（升序）</li>
+<li>右边 <code>[0,1,2]</code> 也是有序的</li>
+</ul>
+<p>再看：<code>[6,7,0,1,2,3,4]</code></p>
+<ul>
+<li>从中间分开：<code>[6,7,0]</code> 和 <code>[1,2,3,4]</code></li>
+<li>左边无序，右边 <code>[1,2,3,4]</code> 有序</li>
+</ul>
+<h4>算法步骤 📝</h4>
+<ol>
+<li><p><strong>初始化</strong>：左右指针 <code>left = 0</code>, <code>right = len(nums) - 1</code></p>
+</li>
+<li><p><strong>二分循环</strong>：当 <code>left &lt;= right</code> 时循环</p>
+<p>a. 计算中点：<code>mid = left + (right - left) // 2</code></p>
+<p>b. <strong>找到目标</strong>：如果 <code>nums[mid] == target</code>，返回 <code>mid</code></p>
+<p>c. <strong>判断哪半边有序</strong>：</p>
+<ul>
+<li>如果 <code>nums[left] &lt;= nums[mid]</code>：左半边有序</li>
+<li>否则：右半边有序</li>
+</ul>
+<p>d. <strong>在有序半边判断目标位置</strong>：</p>
+<p>   <strong>情况1：左半边有序</strong> (<code>nums[left] &lt;= nums[mid]</code>)</p>
+<pre><code>判断 target 是否在 [nums[left], nums[mid]) 范围内：
+- 如果是：right = mid - 1（去左边找）
+- 否则：left = mid + 1（去右边找）
+</code></pre>
+<p>   <strong>情况2：右半边有序</strong> (<code>nums[mid] &lt; nums[left]</code>)</p>
+<pre><code>判断 target 是否在 (nums[mid], nums[right]] 范围内：
+- 如果是：left = mid + 1（去右边找）
+- 否则：right = mid - 1（去左边找）
+</code></pre>
+</li>
+<li><p><strong>未找到</strong>：返回 <code>-1</code></p>
+</li>
+</ol>
+<h4>为什么这样判断？🤔</h4>
+<p>关键在于：<strong>有序的一半可以帮助我们确定目标值是否在这一半</strong></p>
+<ul>
+<li>如果左半边有序且 <code>target</code> 在左半边的范围内 → 去左边找</li>
+<li>如果左半边有序但 <code>target</code> 不在范围内 → 目标只能在右边</li>
+<li>右半边同理</li>
+</ul>
+<h4>图示理解 📊</h4>
+<pre><code>数组：[4, 5, 6, 7, 0, 1, 2]，target = 0
+
+初始：left=0(4), right=6(2)
+      mid=3(7)
+      
+      左半边 [4,5,6,7] 有序
+      target=0 不在 [4,7] 范围内
+      → 去右边，left = 4
+
+第2轮：left=4(0), right=6(2)
+       mid=5(1)
+       
+       左半边 [0,1] 相对于原数组有序
+       target=0 在 [0,1] 范围内
+       → 去左边，right = 4
+
+第3轮：left=4(0), right=4(0)
+       mid=4(0) == target
+       → 返回 4 ✓
+</code></pre>
+<hr>
+<h3>📝 参考代码</h3>
+<pre><code class="language-python">class Solution:
+    def search(self, nums: list[int], target: int) -&gt; int:
+        &quot;&quot;&quot;
+        在旋转排序数组中搜索目标值
+        时间复杂度: O(log n)
+        空间复杂度: O(1)
+        &quot;&quot;&quot;
+        if not nums:
+            return -1
+        
+        left, right = 0, len(nums) - 1
+        
+        while left &lt;= right:
+            # 计算中点（防止整数溢出）
+            mid = left + (right - left) // 2
+            
+            # 情况1：直接找到目标
+            if nums[mid] == target:
+                return mid
+            
+            # 情况2：左半边有序 [left, mid] 是升序
+            if nums[left] &lt;= nums[mid]:
+                # 判断 target 是否在左半边范围内
+                # 注意：因为 nums[mid] != target，所以范围是 [left, mid)
+                if nums[left] &lt;= target &lt; nums[mid]:
+                    # target 在左半边，去左边找
+                    right = mid - 1
+                else:
+                    # target 不在左半边，去右边找
+                    left = mid + 1
+            
+            # 情况3：右半边有序 (mid, right] 是升序
+            else:
+                # 判断 target 是否在右半边范围内
+                # 注意：因为 nums[mid] != target，所以范围是 (mid, right]
+                if nums[mid] &lt; target &lt;= nums[right]:
+                    # target 在右半边，去右边找
+                    left = mid + 1
+                else:
+                    # target 不在右半边，去左边找
+                    right = mid - 1
+        
+        # 未找到目标
+        return -1
+
+
+# ==================== 测试代码 ====================
+
+def test_solution():
+    &quot;&quot;&quot;测试各种情况&quot;&quot;&quot;
+    sol = Solution()
+    
+    # 测试用例1：基本旋转数组
+    nums1 = [4, 5, 6, 7, 0, 1, 2]
+    assert sol.search(nums1, 0) == 4, f&quot;Test1 failed: expected 4, got {sol.search(nums1, 0)}&quot;
+    assert sol.search(nums1, 3) == -1, f&quot;Test1 failed: expected -1&quot;
+    print(&quot;✓ 测试用例1通过：基本旋转数组&quot;)
+    
+    # 测试用例2：单元素数组
+    nums2 = [1]
+    assert sol.search(nums2, 0) == -1
+    assert sol.search(nums2, 1) == 0
+    print(&quot;✓ 测试用例2通过：单元素数组&quot;)
+    
+    # 测试用例3：未旋转的数组
+    nums3 = [1, 2, 3, 4, 5]
+    assert sol.search(nums3, 3) == 2
+    assert sol.search(nums3, 6) == -1
+    print(&quot;✓ 测试用例3通过：未旋转数组&quot;)
+    
+    # 测试用例4：边界值
+    nums4 = [1, 3]
+    assert sol.search(nums4, 3) == 1
+    assert sol.search(nums4, 1) == 0
+    print(&quot;✓ 测试用例4通过：两元素数组&quot;)
+    
+    # 测试用例5：大范围旋转
+    nums5 = [5, 6, 7, 8, 9, 1, 2, 3, 4]
+    assert sol.search(nums5, 9) == 4
+    assert sol.search(nums5, 1) == 5
+    print(&quot;✓ 测试用例5通过：大范围旋转&quot;)
+    
+    print(&quot;\n🎉 所有测试用例通过！&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    test_solution()
+</code></pre>
+<h4>代码关键点解读 🔑</h4>
+<ol>
+<li><p><strong><code>mid = left + (right - left) // 2</code></strong></p>
+<ul>
+<li>防止 <code>(left + right)</code> 溢出的写法</li>
+<li>在 Python 中整数不会溢出，但这是良好习惯</li>
+</ul>
+</li>
+<li><p><strong><code>nums[left] &lt;= nums[mid]</code> 的判断</strong></p>
+<ul>
+<li>注意是 <strong>&lt;=</strong> 不是 <strong>&lt;</strong></li>
+<li>当 <code>left == mid</code> 时（两元素情况），需要 <code>=</code> 来判断左半边有序</li>
+</ul>
+</li>
+<li><p><strong>边界条件的包含/不包含</strong></p>
+<ul>
+<li><code>nums[left] &lt;= target &lt; nums[mid]</code>：左边包含 <code>left</code>，不包含 <code>mid</code>（因为已经判断过 <code>nums[mid] != target</code>）</li>
+<li><code>nums[mid] &lt; target &lt;= nums[right]</code>：右边不包含 <code>mid</code>，包含 <code>right</code></li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3>⏱️ 复杂度分析</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>时间复杂度</strong></td>
+<td>O(log n)</td>
+<td>每次循环将搜索范围减半，二分查找特性</td>
+</tr>
+<tr>
+<td><strong>空间复杂度</strong></td>
+<td>O(1)</td>
+<td>只使用了常数额外空间（left, right, mid）</td>
+</tr>
+</tbody></table>
+<p><strong>最优情况</strong>：O(1) - 中点直接命中目标</p>
+<p><strong>最坏情况</strong>：O(log n) - 需要一直二分直到范围为空</p>
+<hr>
+<h3>🔑 关键要点总结</h3>
+<ol>
+<li><p><strong>核心洞察</strong>：旋转数组中，中点分割后必有一半有序</p>
+</li>
+<li><p><strong>判断策略</strong>：</p>
+<ul>
+<li>先找有序的一半</li>
+<li>再看目标是否在有序半边的范围内</li>
+<li>在 → 去有序半边</li>
+<li>不在 → 去无序半边</li>
+</ul>
+</li>
+<li><p><strong>易错点</strong>：</p>
+<ul>
+<li>边界条件的开闭（是否包含 <code>mid</code>）</li>
+<li><code>nums[left] &lt;= nums[mid]</code> 要用 <code>&lt;=</code></li>
+<li>单元素、双元素等边界情况的测试</li>
+</ul>
+</li>
+<li><p><strong>变体延伸</strong>：</p>
+<ul>
+<li>有重复元素的情况（需要额外处理 <code>nums[left] == nums[mid]</code>）</li>
+<li>找旋转点（最小值）</li>
+<li>找峰值元素</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3>📚 类似题目</h3>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>题目</th>
+<th>难度</th>
+<th>关联点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>81</td>
+<td>搜索旋转排序数组 II</td>
+<td>🟡 中等</td>
+<td>含重复元素，最坏 O(n)</td>
+</tr>
+<tr>
+<td>153</td>
+<td>寻找旋转排序数组中的最小值</td>
+<td>🟡 中等</td>
+<td>找旋转点而非目标值</td>
+</tr>
+<tr>
+<td>154</td>
+<td>寻找旋转排序数组中的最小值 II</td>
+<td>🔴 困难</td>
+<td>含重复元素</td>
+</tr>
+<tr>
+<td>162</td>
+<td>寻找峰值</td>
+<td>🟡 中等</td>
+<td>二分查找变体</td>
+</tr>
+<tr>
+<td>704</td>
+<td>二分查找</td>
+<td>🟢 简单</td>
+<td>基础二分，必会</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>💡 面试Tips</h3>
+<p><strong>被问到这道题时，建议的答题框架：</strong></p>
+<ol>
+<li><p><strong>先确认理解题意</strong>：数组是有序但被旋转了，要求 O(log n)</p>
+</li>
+<li><p><strong>说出核心洞察</strong>：旋转后中点分割必有一半有序</p>
+</li>
+<li><p><strong>手绘示例辅助</strong>：画一个旋转数组，演示二分过程</p>
+</li>
+<li><p><strong>写出伪代码</strong>：先描述逻辑再写代码</p>
+</li>
+<li><p><strong>主动提及边界</strong>：单元素、两元素、未旋转等测试用例</p>
+</li>
+<li><p><strong>时间/空间分析</strong>：O(log n) 时间，O(1) 空间</p>
+</li>
+</ol>
+<p><strong>可能的追问：</strong></p>
+<ul>
+<li>如果有重复元素怎么办？（最坏 O(n)）</li>
+<li>怎么找旋转点/最小值？（类似思路）</li>
+<li>如果要求找插入位置？（变体二分）</li>
+</ul>
+<hr>
+<p><strong>📝 学习建议</strong>：这道题是二分查找的高频变体，建议手写3遍以上，直到能默写。理解 &quot;一半有序&quot; 这个核心性质比死记硬背代码更重要。</p>
+
+    </div>
+  </div>
+  
+</body>
+</html>
