@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#206 反转链表 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h2>🎯 LeetCode 精讲 #206 - 反转链表</h2>
+<h3>📋 题目描述</h3>
+<p>给你单链表的头节点 <code>head</code>，请你反转链表，并返回反转后的链表。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：head = [1,2,3,4,5]
+输出：[5,4,3,2,1]
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：head = [1,2]
+输出：[2,1]
+</code></pre>
+<p><strong>示例 3：</strong></p>
+<pre><code>输入：head = []
+输出：[]
+</code></pre>
+<p><strong>提示：</strong></p>
+<ul>
+<li>链表中节点的数目范围是 <code>[0, 5000]</code></li>
+<li><code>-5000 &lt;= Node.val &lt;= 5000</code></li>
+</ul>
+<hr>
+<h3>💡 解题思路</h3>
+<p>链表反转的核心是<strong>改变每个节点的 next 指针指向</strong>。</p>
+<p><strong>方法一：迭代法（三指针）</strong></p>
+<p>想象有一排人手拉手，你要让他们调转方向。你需要：</p>
+<ol>
+<li>用 <code>prev</code> 记录前一个节点（初始为 null，因为原头节点会变成尾节点）</li>
+<li>用 <code>curr</code> 遍历当前节点</li>
+<li>用 <code>next_temp</code> 暂存下一个节点（防止断链后丢失）</li>
+</ol>
+<p><strong>过程演示：</strong></p>
+<pre><code>初始: 1 → 2 → 3 → 4 → 5 → null
+      ↑
+     head
+
+Step 1: null ← 1    2 → 3 → 4 → 5 → null
+                ↑
+               curr
+
+Step 2: null ← 1 ← 2    3 → 4 → 5 → null
+                     ↑
+                    curr
+
+最终: null ← 1 ← 2 ← 3 ← 4 ← 5
+                          ↑
+                         head (新的头)
+</code></pre>
+<p><strong>方法二：递归法</strong></p>
+<p>递归的核心思想：假设后面的链表已经反转好了，我只需要把当前节点接到后面去。</p>
+<pre><code>假设: 1 → 2 → 3 → 4 → 5
+         ↑_________| (后面已经反转成 5→4→3→2)
+
+现在需要: 把 2 的 next 指向 1，把 1 的 next 置空
+</code></pre>
+<p>递归的妙处是代码简洁，但对栈深度有要求（O(n)）。</p>
+<hr>
+<h3>📝 参考代码</h3>
+<p><strong>方法一：迭代法（推荐，空间 O(1)）</strong></p>
+<pre><code class="language-python"># Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def reverseList(self, head: ListNode) -&gt; ListNode:
+        prev = None      # 前一个节点，初始为 null
+        curr = head      # 当前节点，从头开始
+        
+        while curr:
+            next_temp = curr.next   # 暂存下一个节点
+            curr.next = prev        # 反转：当前节点指向前一个
+            prev = curr             # prev 前移
+            curr = next_temp        # curr 前移
+        
+        return prev   # 最后 prev 指向新的头节点
+</code></pre>
+<p><strong>方法二：递归法（理解递归思想）</strong></p>
+<pre><code class="language-python">class Solution:
+    def reverseList(self, head: ListNode) -&gt; ListNode:
+        # 递归终止条件：空链表或只剩一个节点
+        if not head or not head.next:
+            return head
+        
+        # 递归反转后面的链表
+        new_head = self.reverseList(head.next)
+        
+        # 现在的状态：head → (已反转的部分)
+        # 需要：让 head.next 指向自己，自己指向 null
+        head.next.next = head   # 下一个节点的 next 指向当前
+        head.next = None        # 当前节点变成尾节点
+        
+        return new_head
+</code></pre>
+<p><strong>方法三：头插法（另一种迭代思路）</strong></p>
+<pre><code class="language-python">class Solution:
+    def reverseList(self, head: ListNode) -&gt; ListNode:
+        dummy = ListNode(0)   # 虚拟头节点
+        # 不断把当前节点插到 dummy 后面
+        while head:
+            next_node = head.next      # 保存下一个
+            head.next = dummy.next     # 当前节点指向 dummy 的下一个
+            dummy.next = head          # dummy 指向当前（头插）
+            head = next_node           # 移动到下一个
+        return dummy.next
+</code></pre>
+<hr>
+<h3>⏱️ 复杂度分析</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>迭代法</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>最优，只遍历一次</td>
+</tr>
+<tr>
+<td>递归法</td>
+<td>O(n)</td>
+<td>O(n)</td>
+<td>栈空间消耗，有栈溢出风险</td>
+</tr>
+<tr>
+<td>头插法</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>与迭代法等价，思路不同</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>🔑 关键要点</h3>
+<ol>
+<li><strong>保存 next 再修改</strong> —— 链表操作的第一原则，先保存再断链</li>
+<li><strong>三指针技巧</strong> —— <code>prev</code>, <code>curr</code>, <code>next</code> 是链表遍历的标配</li>
+<li><strong>虚拟头节点</strong> —— 头插法时常用，简化边界处理</li>
+<li><strong>递归的理解</strong> —— 相信子问题已解决，专注当前这一步</li>
+</ol>
+<p><strong>易错点：</strong></p>
+<ul>
+<li>忘记保存 <code>curr.next</code> 就直接修改，导致链表断裂</li>
+<li>递归法忘记把 <code>head.next</code> 置空，形成环</li>
+<li>返回的是 <code>prev</code> 而不是 <code>curr</code>（循环结束后 <code>curr</code> 是 null）</li>
+</ul>
+<hr>
+<h3>📚 类似题目</h3>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>标题</th>
+<th>关联点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>92</td>
+<td>反转链表 II</td>
+<td>反转指定区间的链表</td>
+</tr>
+<tr>
+<td>25</td>
+<td>K 个一组翻转链表</td>
+<td>分组反转</td>
+</tr>
+<tr>
+<td>234</td>
+<td>回文链表</td>
+<td>先反转后半部分再比较</td>
+</tr>
+<tr>
+<td>143</td>
+<td>重排链表</td>
+<td>找中点 + 反转 + 合并</td>
+</tr>
+<tr>
+<td>141</td>
+<td>环形链表</td>
+<td>快慢指针，链表遍历基础</td>
+</tr>
+</tbody></table>
+
+    </div>
+  </div>
+  
+</body>
+</html>
