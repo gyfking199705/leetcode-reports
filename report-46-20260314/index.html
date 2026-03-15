@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#46 全排列 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h2>🎯 LeetCode 精讲 #46 - 全排列</h2>
+<h3>📋 题目描述</h3>
+<p><strong>题目链接:</strong> <a href="https://leetcode.cn/problems/permutations/">https://leetcode.cn/problems/permutations/</a></p>
+<p><strong>难度:</strong> 中等</p>
+<p><strong>题目描述:</strong>
+给定一个<strong>不含重复数字</strong>的数组 <code>nums</code>，返回其<strong>所有可能的全排列</strong>。你可以按任意顺序返回答案。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: nums = [1,2,3]
+输出: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: nums = [0,1]
+输出: [[0,1],[1,0]]
+</code></pre>
+<p><strong>示例 3:</strong></p>
+<pre><code>输入: nums = [1]
+输出: [[1]]
+</code></pre>
+<p><strong>约束条件:</strong></p>
+<ul>
+<li><code>1 &lt;= nums.length &lt;= 6</code></li>
+<li><code>-10 &lt;= nums[i] &lt;= 10</code></li>
+<li><code>nums</code> 中的所有整数<strong>互不相同</strong></li>
+</ul>
+<hr>
+<h3>💡 解题思路</h3>
+<h4>一、算法选择：回溯法 (Backtracking)</h4>
+<p>全排列问题是<strong>回溯算法</strong>的经典应用场景。回溯法的核心思想是：</p>
+<blockquote>
+<p>通过深度优先搜索(DFS)遍历所有可能的解空间，在搜索过程中动态构建解，当不满足条件时&quot;回溯&quot;撤销选择，继续探索其他分支。</p>
+</blockquote>
+<h4>二、回溯算法核心框架</h4>
+<pre><code>回溯函数(当前状态):
+    1. 终止条件：如果满足结束条件，记录结果并返回
+    2. 遍历所有可能的选择:
+        a. 做出选择：将当前元素加入路径
+        b. 递归调用：继续向下搜索
+        c. 撤销选择：恢复现场，移除当前元素（回溯）
+</code></pre>
+<h4>三、递归树详解（以 [1,2,3] 为例）</h4>
+<pre><code>                           开始 []
+                            │
+        ┌───────────────────┼───────────────────┐
+        ▼                   ▼                   ▼
+       [1]                [2]                [3]
+     /     \            /     \            /     \
+   [1,2]  [1,3]      [2,1]  [2,3]      [3,1]  [3,2]
+     │      │          │      │          │      │
+    ▼      ▼          ▼      ▼          ▼      ▼
+[1,2,3] [1,3,2]   [2,1,3] [2,3,1]   [3,1,2] [3,2,1]
+</code></pre>
+<p><strong>递归树说明:</strong></p>
+<ul>
+<li><strong>深度</strong>: 等于数组长度 <code>n</code>，每层选择一个数字</li>
+<li><strong>分支</strong>: 每层的分支数为剩余未使用的数字个数</li>
+<li><strong>叶子节点</strong>: 共 <code>n!</code> 个，即所有可能的排列</li>
+</ul>
+<h4>四、剪枝策略</h4>
+<p>本题由于题目保证数字<strong>互不相同</strong>，剪枝相对简单：</p>
+<table>
+<thead>
+<tr>
+<th>剪枝条件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>used[i] == True</code></td>
+<td>当前数字已在路径中使用过，跳过</td>
+</tr>
+<tr>
+<td>无其他剪枝</td>
+<td>由于元素唯一，无需额外去重处理</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>💡 <strong>进阶思考</strong>: 如果数组包含重复元素（如LeetCode 47题），需要额外剪枝：<code>if i &gt; 0 and nums[i] == nums[i-1] and not used[i-1]: continue</code></p>
+</blockquote>
+<h4>五、状态管理</h4>
+<table>
+<thead>
+<tr>
+<th>状态变量</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>path</code></td>
+<td>List</td>
+<td>当前构建的排列路径</td>
+</tr>
+<tr>
+<td><code>used</code></td>
+<td>List[bool]</td>
+<td>标记每个位置数字是否已使用</td>
+</tr>
+<tr>
+<td><code>result</code></td>
+<td>List[List]</td>
+<td>存储所有找到的排列</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>📝 参考代码</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def permute(self, nums: List[int]) -&gt; List[List[int]]:
+        &quot;&quot;&quot;
+        全排列 - 回溯算法实现
+        
+        Args:
+            nums: 不含重复数字的整数数组
+            
+        Returns:
+            所有可能的全排列列表
+        &quot;&quot;&quot;
+        n = len(nums)
+        result = []           # 存储最终结果
+        path = []             # 当前排列路径
+        used = [False] * n    # 标记数组，记录每个数字是否已使用
+        
+        def backtrack():
+            &quot;&quot;&quot;
+            回溯函数
+            核心思想：在每个位置尝试所有未使用的数字
+            &quot;&quot;&quot;
+            # 【终止条件】当前排列长度等于原数组长度，得到一个完整排列
+            if len(path) == n:
+                # 注意：必须使用 path[:] 或 list(path) 进行深拷贝
+                # 直接 append(path) 会导致所有结果引用同一列表
+                result.append(path[:])
+                return
+            
+            # 【遍历选择】尝试每个位置的所有可能数字
+            for i in range(n):
+                # 【剪枝】如果当前数字已使用，跳过
+                if used[i]:
+                    continue
+                
+                # 【做出选择】将当前数字加入路径并标记为已使用
+                path.append(nums[i])
+                used[i] = True
+                
+                # 【递归调用】继续填充下一个位置
+                backtrack()
+                
+                # 【撤销选择】恢复现场，移除当前数字并取消标记
+                path.pop()
+                used[i] = False
+        
+        # 启动回溯
+        backtrack()
+        return result
+
+
+# ==================== 测试代码 ====================
+if __name__ == &quot;__main__&quot;:
+    solution = Solution()
+    
+    # 测试用例 1: 3个元素
+    nums1 = [1, 2, 3]
+    result1 = solution.permute(nums1)
+    print(f&quot;输入: {nums1}&quot;)
+    print(f&quot;输出: {result1}&quot;)
+    print(f&quot;排列数: {len(result1)} (期望: 6)&quot;)
+    print()
+    
+    # 测试用例 2: 2个元素
+    nums2 = [0, 1]
+    result2 = solution.permute(nums2)
+    print(f&quot;输入: {nums2}&quot;)
+    print(f&quot;输出: {result2}&quot;)
+    print()
+    
+    # 测试用例 3: 单个元素
+    nums3 = [1]
+    result3 = solution.permute(nums3)
+    print(f&quot;输入: {nums3}&quot;)
+    print(f&quot;输出: {result3}&quot;)
+</code></pre>
+<h4>代码运行结果：</h4>
+<pre><code>输入: [1, 2, 3]
+输出: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+排列数: 6 (期望: 6)
+</code></pre>
+<hr>
+<h3>⏱️ 复杂度分析</h3>
+<h4>时间复杂度: <strong>O(n × n!)</strong></h4>
+<table>
+<thead>
+<tr>
+<th>分析项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>排列总数</td>
+<td>共 <code>n!</code> 种排列</td>
+</tr>
+<tr>
+<td>每种排列的构建成本</td>
+<td>需要 <code>n</code> 次操作将元素加入路径</td>
+</tr>
+<tr>
+<td>总时间</td>
+<td><code>O(n × n!)</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>推导：第一层有 n 个选择，第二层有 n-1 个选择... 总节点数 = n + n(n-1) + n(n-1)(n-2) + ... + n! ≈ n! × (1 + 1/1! + 1/2! + ...) ≈ n! × e ≈ O(n!)</p>
+</blockquote>
+<h4>空间复杂度: <strong>O(n)</strong></h4>
+<table>
+<thead>
+<tr>
+<th>占用项</th>
+<th>空间</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>递归栈深度</td>
+<td>O(n) - 最深递归到第n层</td>
+</tr>
+<tr>
+<td><code>path</code> 路径数组</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>used</code> 标记数组</td>
+<td>O(n)</td>
+</tr>
+<tr>
+<td><code>result</code> 结果存储</td>
+<td>O(n × n!) - 不计入算法额外空间</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：结果存储空间不计入算法复杂度，只考虑额外辅助空间，故为 <strong>O(n)</strong></p>
+</blockquote>
+<hr>
+<h3>🔑 关键要点</h3>
+<h4>1. 回溯三要素</h4>
+<table>
+<thead>
+<tr>
+<th>要素</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>路径</strong></td>
+<td>已做出的选择（当前排列）</td>
+</tr>
+<tr>
+<td><strong>选择列表</strong></td>
+<td>当前可做的选择（未使用的数字）</td>
+</tr>
+<tr>
+<td><strong>终止条件</strong></td>
+<td>无法再做选择的条件（排列完成）</td>
+</tr>
+</tbody></table>
+<h4>2. 常见易错点</h4>
+<ul>
+<li>⚠️ <strong>忘记深拷贝</strong>: <code>result.append(path)</code> 会导致所有结果相同，必须用 <code>path[:]</code></li>
+<li>⚠️ <strong>忘记恢复现场</strong>: 递归返回后必须撤销选择，否则影响其他分支</li>
+<li>⚠️ <strong>标记数组使用</strong>: <code>used</code> 数组必须与 <code>path</code> 同步更新</li>
+</ul>
+<h4>3. 回溯 vs 递归</h4>
+<ul>
+<li><strong>普通递归</strong>: 问题分解为子问题，子问题不重叠</li>
+<li><strong>回溯</strong>: 遍历解空间，需要撤销选择恢复现场</li>
+</ul>
+<h4>4. 优化方向</h4>
+<ul>
+<li>对于含重复元素的数组（LeetCode 47），需要先排序 + 剪枝去重</li>
+<li>可使用 <code>swap</code> 交换法避免 <code>used</code> 数组，空间优化到 O(1)（不包括结果）</li>
+</ul>
+<hr>
+<h3>📚 类似题目</h3>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>题目名称</th>
+<th>难度</th>
+<th>关联点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>47</strong></td>
+<td>全排列 II</td>
+<td>中等</td>
+<td>含重复元素的全排列，需剪枝去重</td>
+</tr>
+<tr>
+<td><strong>31</strong></td>
+<td>下一个排列</td>
+<td>中等</td>
+<td>排列的字典序操作</td>
+</tr>
+<tr>
+<td><strong>77</strong></td>
+<td>组合</td>
+<td>中等</td>
+<td>回溯算法，选k个数而非全排列</td>
+</tr>
+<tr>
+<td><strong>78</strong></td>
+<td>子集</td>
+<td>中等</td>
+<td>回溯算法，收集所有子集</td>
+</tr>
+<tr>
+<td><strong>51</strong></td>
+<td>N皇后</td>
+<td>困难</td>
+<td>经典回溯，约束条件更复杂</td>
+</tr>
+</tbody></table>
+<h4>进阶学习路径</h4>
+<pre><code>全排列(46) → 全排列II(47) → 组合(77) → 子集(78) → N皇后(51)
+   │              │            │          │          │
+   └──────────────┴────────────┴──────────┴──────────┘
+                    回溯算法专题
+</code></pre>
+<hr>
+<p><strong>总结</strong>: LeetCode 46 是理解回溯算法的绝佳入门题。掌握&quot;选择-递归-撤销&quot;的三步走策略，是解决所有回溯问题的基础。建议结合递归树手动模拟执行过程，加深对回溯原理的理解。</p>
+
+    </div>
+  </div>
+  
+</body>
+</html>

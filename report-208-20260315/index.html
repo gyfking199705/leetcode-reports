@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#208 实现Trie前缀树 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h1>LeetCode 208. 实现 Trie (前缀树)</h1>
+<h2>📋 题目描述</h2>
+<p><strong>Trie</strong>（发音类似 &quot;try&quot;），也称为<strong>前缀树</strong>或<strong>字典树</strong>，是一种树形数据结构，用于高效地存储和检索字符串数据集中的键。这一数据结构有相当多的应用情景，例如自动补全和拼写检查。</p>
+<p>请你实现 Trie 类：</p>
+<ul>
+<li><code>Trie()</code> 初始化前缀树对象。</li>
+<li><code>void insert(String word)</code> 向前缀树中插入字符串 <code>word</code>。</li>
+<li><code>boolean search(String word)</code> 如果字符串 <code>word</code> 在前缀树中，返回 <code>true</code>（即，在检索之前已经插入）；否则，返回 <code>false</code>。</li>
+<li><code>boolean startsWith(String prefix)</code> 如果之前已经插入的字符串 <code>word</code> 的前缀之一为 <code>prefix</code>，返回 <code>true</code>；否则，返回 <code>false</code>。</li>
+</ul>
+<h3>示例</h3>
+<pre><code>输入
+[&quot;Trie&quot;, &quot;insert&quot;, &quot;search&quot;, &quot;search&quot;, &quot;startsWith&quot;, &quot;insert&quot;, &quot;search&quot;]
+[[], [&quot;apple&quot;], [&quot;apple&quot;], [&quot;app&quot;], [&quot;app&quot;], [&quot;app&quot;], [&quot;app&quot;]]
+输出
+[null, null, true, false, true, null, true]
+
+解释
+Trie trie = new Trie();
+trie.insert(&quot;apple&quot;);
+trie.search(&quot;apple&quot;);   // 返回 True
+trie.search(&quot;app&quot;);     // 返回 False
+trie.startsWith(&quot;app&quot;); // 返回 True
+trie.insert(&quot;app&quot;);
+trie.search(&quot;app&quot;);     // 返回 True
+</code></pre>
+<h3>提示</h3>
+<ul>
+<li><code>1 &lt;= word.length, prefix.length &lt;= 2000</code></li>
+<li><code>word</code> 和 <code>prefix</code> 仅由小写英文字母组成</li>
+<li><code>insert</code>、<code>search</code> 和 <code>startsWith</code> 调用次数总计不超过 <code>3 * 10⁴</code> 次</li>
+</ul>
+<hr>
+<h2>💡 解题思路</h2>
+<h3>核心概念：什么是 Trie？</h3>
+<p>Trie 是一种<strong>多叉树</strong>结构，每个节点代表一个字符，从根节点到某一节点的路径表示一个字符串（前缀）。</p>
+<p><strong>关键特性：</strong></p>
+<ol>
+<li><strong>根节点为空</strong>：不存储字符</li>
+<li><strong>边代表字符</strong>：从父节点到子节点的边标记一个字符</li>
+<li><strong>节点标记终止</strong>：用一个布尔值标记是否有单词在此节点结束</li>
+<li><strong>共享前缀</strong>：具有公共前缀的单词共享路径</li>
+</ol>
+<h3>结构示意图</h3>
+<p>插入 &quot;apple&quot; 和 &quot;app&quot; 后的 Trie：</p>
+<pre><code>        (root)
+          |
+          a
+          |
+          p
+          |
+          p  ← isEnd = true (单词 &quot;app&quot; 结束)
+          |
+          l
+          |
+          e  ← isEnd = true (单词 &quot;apple&quot; 结束)
+</code></pre>
+<h3>算法步骤</h3>
+<h4>1. 节点定义</h4>
+<pre><code class="language-python">class TrieNode:
+    def __init__(self):
+        # 子节点字典：字符 -&gt; TrieNode
+        self.children = {}
+        # 标记是否有单词在此节点结束
+        self.is_end = False
+</code></pre>
+<h4>2. 插入操作 (insert)</h4>
+<p><strong>时间复杂度：O(m)</strong>，其中 m 为单词长度</p>
+<pre><code>从根节点开始
+对于单词中的每个字符 c：
+    如果当前节点的 children 中不存在 c：
+        创建新节点
+    移动到子节点
+标记最后一个节点 is_end = True
+</code></pre>
+<h4>3. 搜索操作 (search)</h4>
+<p><strong>时间复杂度：O(m)</strong></p>
+<pre><code>从根节点开始
+对于单词中的每个字符 c：
+    如果当前节点的 children 中不存在 c：
+        返回 False
+    移动到子节点
+返回当前节点的 is_end 值
+</code></pre>
+<h4>4. 前缀匹配 (startsWith)</h4>
+<p><strong>时间复杂度：O(m)</strong></p>
+<pre><code>从根节点开始
+对于前缀中的每个字符 c：
+    如果当前节点的 children 中不存在 c：
+        返回 False
+    移动到子节点
+返回 True（只要能走完前缀就存在）
+</code></pre>
+<hr>
+<h2>🔧 完整代码实现</h2>
+<h3>Python 实现</h3>
+<pre><code class="language-python">class TrieNode:
+    &quot;&quot;&quot;Trie 节点定义&quot;&quot;&quot;
+    def __init__(self):
+        # 使用字典存储子节点，键为字符，值为 TrieNode
+        self.children = {}
+        # 标记是否为某个单词的结尾
+        self.is_end = False
+
+
+class Trie:
+    &quot;&quot;&quot;前缀树实现&quot;&quot;&quot;
+    
+    def __init__(self):
+        &quot;&quot;&quot;初始化 Trie，创建根节点&quot;&quot;&quot;
+        self.root = TrieNode()
+
+    def insert(self, word: str) -&gt; None:
+        &quot;&quot;&quot;
+        插入单词到 Trie
+        时间复杂度: O(m)，m 为单词长度
+        &quot;&quot;&quot;
+        node = self.root
+        for char in word:
+            # 如果字符不存在，创建新节点
+            if char not in node.children:
+                node.children[char] = TrieNode()
+            # 移动到子节点
+            node = node.children[char]
+        # 标记单词结束
+        node.is_end = True
+
+    def search(self, word: str) -&gt; bool:
+        &quot;&quot;&quot;
+        搜索完整单词
+        时间复杂度: O(m)
+        &quot;&quot;&quot;
+        node = self._search_prefix(word)
+        # 必须存在该节点，且该节点是某个单词的结尾
+        return node is not None and node.is_end
+
+    def startsWith(self, prefix: str) -&gt; bool:
+        &quot;&quot;&quot;
+        检查是否存在以 prefix 为前缀的单词
+        时间复杂度: O(m)
+        &quot;&quot;&quot;
+        return self._search_prefix(prefix) is not None
+    
+    def _search_prefix(self, prefix: str) -&gt; TrieNode:
+        &quot;&quot;&quot;
+        辅助方法：搜索前缀，返回最后一个节点或 None
+        &quot;&quot;&quot;
+        node = self.root
+        for char in prefix:
+            if char not in node.children:
+                return None
+            node = node.children[char]
+        return node
+
+
+# ==================== 测试代码 ====================
+if __name__ == &quot;__main__&quot;:
+    # 示例测试
+    trie = Trie()
+    
+    # 插入单词
+    print(&quot;插入 &#39;apple&#39;&quot;)
+    trie.insert(&quot;apple&quot;)
+    
+    # 测试搜索
+    print(f&quot;搜索 &#39;apple&#39;: {trie.search(&#39;apple&#39;)}&quot;)      # True
+    print(f&quot;搜索 &#39;app&#39;: {trie.search(&#39;app&#39;)}&quot;)          # False
+    print(f&quot;前缀匹配 &#39;app&#39;: {trie.startsWith(&#39;app&#39;)}&quot;)  # True
+    
+    # 插入新单词
+    print(&quot;\n插入 &#39;app&#39;&quot;)
+    trie.insert(&quot;app&quot;)
+    print(f&quot;搜索 &#39;app&#39;: {trie.search(&#39;app&#39;)}&quot;)          # True
+    
+    # 更多测试
+    print(&quot;\n更多测试:&quot;)
+    trie.insert(&quot;application&quot;)
+    print(f&quot;前缀匹配 &#39;appl&#39;: {trie.startsWith(&#39;appl&#39;)}&quot;)  # True
+    print(f&quot;搜索 &#39;appli&#39;: {trie.search(&#39;appli&#39;)}&quot;)         # False
+    print(f&quot;搜索 &#39;application&#39;: {trie.search(&#39;application&#39;)}&quot;)  # True
+</code></pre>
+<h3>优化版本：使用数组替代字典</h3>
+<p>对于仅包含小写英文字母的情况，可用固定大小数组优化：</p>
+<pre><code class="language-python">class TrieNode:
+    def __init__(self):
+        # 26个小写字母，初始为 None
+        self.children = [None] * 26
+        self.is_end = False
+
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def _char_to_idx(self, char: str) -&gt; int:
+        &quot;&quot;&quot;字符转索引：&#39;a&#39; -&gt; 0, &#39;b&#39; -&gt; 1, ...&quot;&quot;&quot;
+        return ord(char) - ord(&#39;a&#39;)
+
+    def insert(self, word: str) -&gt; None:
+        node = self.root
+        for char in word:
+            idx = self._char_to_idx(char)
+            if node.children[idx] is None:
+                node.children[idx] = TrieNode()
+            node = node.children[idx]
+        node.is_end = True
+
+    def search(self, word: str) -&gt; bool:
+        node = self._search_node(word)
+        return node is not None and node.is_end
+
+    def startsWith(self, prefix: str) -&gt; bool:
+        return self._search_node(prefix) is not None
+    
+    def _search_node(self, word: str):
+        node = self.root
+        for char in word:
+            idx = self._char_to_idx(char)
+            if node.children[idx] is None:
+                return None
+            node = node.children[idx]
+        return node
+</code></pre>
+<h3>Java 实现</h3>
+<pre><code class="language-java">class TrieNode {
+    // 子节点数组
+    TrieNode[] children;
+    // 是否为单词结尾
+    boolean isEnd;
+    
+    public TrieNode() {
+        children = new TrieNode[26]; // 假设只有小写字母
+        isEnd = false;
+    }
+}
+
+class Trie {
+    private TrieNode root;
+    
+    public Trie() {
+        root = new TrieNode();
+    }
+    
+    public void insert(String word) {
+        TrieNode node = root;
+        for (char c : word.toCharArray()) {
+            int idx = c - &#39;a&#39;;
+            if (node.children[idx] == null) {
+                node.children[idx] = new TrieNode();
+            }
+            node = node.children[idx];
+        }
+        node.isEnd = true;
+    }
+    
+    public boolean search(String word) {
+        TrieNode node = searchPrefix(word);
+        return node != null &amp;&amp; node.isEnd;
+    }
+    
+    public boolean startsWith(String prefix) {
+        return searchPrefix(prefix) != null;
+    }
+    
+    private TrieNode searchPrefix(String prefix) {
+        TrieNode node = root;
+        for (char c : prefix.toCharArray()) {
+            int idx = c - &#39;a&#39;;
+            if (node.children[idx] == null) {
+                return null;
+            }
+            node = node.children[idx];
+        }
+        return node;
+    }
+}
+</code></pre>
+<h3>C++ 实现</h3>
+<pre><code class="language-cpp">class TrieNode {
+public:
+    TrieNode* children[26];
+    bool isEnd;
+    
+    TrieNode() {
+        for (int i = 0; i &lt; 26; i++) {
+            children[i] = nullptr;
+        }
+        isEnd = false;
+    }
+};
+
+class Trie {
+private:
+    TrieNode* root;
+    
+    TrieNode* searchPrefix(string prefix) {
+        TrieNode* node = root;
+        for (char c : prefix) {
+            int idx = c - &#39;a&#39;;
+            if (node-&gt;children[idx] == nullptr) {
+                return nullptr;
+            }
+            node = node-&gt;children[idx];
+        }
+        return node;
+    }
+    
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+    
+    void insert(string word) {
+        TrieNode* node = root;
+        for (char c : word) {
+            int idx = c - &#39;a&#39;;
+            if (node-&gt;children[idx] == nullptr) {
+                node-&gt;children[idx] = new TrieNode();
+            }
+            node = node-&gt;children[idx];
+        }
+        node-&gt;isEnd = true;
+    }
+    
+    bool search(string word) {
+        TrieNode* node = searchPrefix(word);
+        return node != nullptr &amp;&amp; node-&gt;isEnd;
+    }
+    
+    bool startsWith(string prefix) {
+        return searchPrefix(prefix) != nullptr;
+    }
+};
+</code></pre>
+<hr>
+<h2>📊 复杂度分析</h2>
+<h3>时间复杂度</h3>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>时间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>insert</td>
+<td>O(m)</td>
+<td>m 为单词长度，需遍历每个字符</td>
+</tr>
+<tr>
+<td>search</td>
+<td>O(m)</td>
+<td>最坏遍历整个单词</td>
+</tr>
+<tr>
+<td>startsWith</td>
+<td>O(m)</td>
+<td>只需匹配前缀</td>
+</tr>
+</tbody></table>
+<h3>空间复杂度</h3>
+<ul>
+<li><strong>最坏情况</strong>：O(n × m)，n 是单词数，m 是单词平均长度</li>
+<li><strong>最优情况</strong>：O(总字符数)，共享前缀可大幅减少空间</li>
+</ul>
+<p><strong>空间优化对比：</strong></p>
+<ul>
+<li>存储 [&quot;apple&quot;, &quot;app&quot;, &quot;application&quot;, &quot;apply&quot;] 共需约 13 个节点</li>
+<li>单独存储需 4 + 3 + 11 + 5 = 23 个字符</li>
+</ul>
+<hr>
+<h2>🎯 关键要点总结</h2>
+<h3>1. Trie 的核心优势</h3>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>优势</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>前缀匹配</td>
+<td>O(m) 时间，远快于哈希表的 O(n×m)</td>
+</tr>
+<tr>
+<td>自动补全</td>
+<td>找到前缀后，DFS/BFS 遍历所有子节点</td>
+</tr>
+<tr>
+<td>字典序遍历</td>
+<td>天然支持按字母顺序输出</td>
+</tr>
+<tr>
+<td>拼写检查</td>
+<td>快速判断单词是否存在</td>
+</tr>
+</tbody></table>
+<h3>2. Trie vs 哈希表</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>Trie</th>
+<th>哈希表</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>精确匹配</td>
+<td>O(m)</td>
+<td>O(1) 平均</td>
+</tr>
+<tr>
+<td>前缀匹配</td>
+<td>O(m)</td>
+<td>O(n×m)</td>
+</tr>
+<tr>
+<td>空间效率</td>
+<td>共享前缀，较优</td>
+<td>独立存储</td>
+</tr>
+<tr>
+<td>字典序</td>
+<td>天然支持</td>
+<td>需额外排序</td>
+</tr>
+</tbody></table>
+<h3>3. 常见变种</h3>
+<ul>
+<li><strong>压缩 Trie</strong>：合并只有一个子节点的链</li>
+<li><strong>后缀 Trie</strong>：存储所有后缀（用于字符串匹配）</li>
+<li><strong>后缀树</strong>：压缩后的后缀 Trie</li>
+<li><strong>AC 自动机</strong>：多模式匹配，基于 Trie + KMP</li>
+</ul>
+<hr>
+<h2>🔗 类似题目</h2>
+<table>
+<thead>
+<tr>
+<th>题目</th>
+<th>难度</th>
+<th>考点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://leetcode.cn/problems/design-add-and-search-words-data-structure/">211. 添加与搜索单词</a></td>
+<td>中等</td>
+<td>Trie + 回溯（通配符 .）</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/word-search-ii/">212. 单词搜索 II</a></td>
+<td>困难</td>
+<td>Trie + DFS + 剪枝</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/maximum-xor-of-two-numbers-in-an-array/">421. 数组中两个数的最大异或值</a></td>
+<td>中等</td>
+<td>二进制 Trie</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/replace-words/">648. 单词替换</a></td>
+<td>中等</td>
+<td>Trie 前缀替换</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/implement-magic-dictionary/">676. 实现一个魔法字典</a></td>
+<td>中等</td>
+<td>Trie + 枚举修改</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/longest-word-in-dictionary/">720. 词典中最长的单词</a></td>
+<td>简单</td>
+<td>Trie 或哈希</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/prefix-and-suffix-search/">745. 前缀和后缀搜索</a></td>
+<td>困难</td>
+<td>Trie 或枚举</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>💡 面试高频问题</h2>
+<p><strong>Q1: 为什么用 Trie 而不是哈希表？</strong></p>
+<blockquote>
+<p>答：前缀匹配是 Trie 的核心优势。哈希表只能做精确匹配，前缀匹配需要遍历所有键，时间复杂度 O(n×m)。而 Trie 是 O(m)。</p>
+</blockquote>
+<p><strong>Q2: Trie 的空间复杂度如何优化？</strong></p>
+<blockquote>
+<p>答：(1) 压缩 Trie，合并单分支链；(2) 用数组替代哈希表（已知字符集大小）；(3) 共享公共前缀天然节省空间。</p>
+</blockquote>
+<p><strong>Q3: 如何扩展支持删除操作？</strong></p>
+<blockquote>
+<p>答：增加引用计数或使用惰性删除。删除时检查节点是否还有其他子节点或是否为其他单词的结尾，决定是否真正删除节点。</p>
+</blockquote>
+<p><strong>Q4: 实际应用场景？</strong></p>
+<blockquote>
+<ul>
+<li>搜索引擎自动补全</li>
+<li>输入法联想</li>
+<li>拼写检查/纠错</li>
+<li>IP 路由最长前缀匹配</li>
+<li>基因组序列分析</li>
+</ul>
+</blockquote>
+<hr>
+<h2>📝 记忆口诀</h2>
+<blockquote>
+<p><strong>&quot;根空边有值，节点标记尾。插入遍历建，搜索沿边追。前缀只需走，终点不问归。&quot;</strong></p>
+</blockquote>
+<hr>
+<p><em>生成时间：2026-03-15 05:46</em><br><em>题目编号：208 - 实现 Trie (前缀树)</em></p>
+
+    </div>
+  </div>
+  
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#200 岛屿数量 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h2>🎯 LeetCode 精讲 #200 - 岛屿数量</h2>
+<h3>📋 题目描述</h3>
+<p>给你一个由 <code>&#39;1&#39;</code>（陆地）和 <code>&#39;0&#39;</code>（水）组成的的二维网格，请你计算网格中岛屿的数量。</p>
+<p>岛屿总是被水包围，并且每座岛屿只能由水平方向和/或竖直方向上相邻的陆地连接形成。此外，你可以假设该网格的四条边均被水包围。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：grid = [
+  [&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;0&quot;],
+  [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;],
+  [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],
+  [&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;]
+]
+输出：1
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：grid = [
+  [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],
+  [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],
+  [&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;],
+  [&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;1&quot;]
+]
+输出：3
+</code></pre>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>m == grid.length</code></li>
+<li><code>n == grid[i].length</code></li>
+<li><code>1 &lt;= m, n &lt;= 300</code></li>
+<li><code>grid[i][j]</code> 的值为 <code>&#39;0&#39;</code> 或 <code>&#39;1&#39;</code></li>
+</ul>
+<hr>
+<h3>💡 解题思路</h3>
+<p>这道题的核心是 <strong>&quot;连通块计数&quot;</strong>。我们需要找出二维网格中所有由 <code>&#39;1&#39;</code> 构成的连通区域的数量。</p>
+<h4>核心思想：洪水填充 (Flood Fill)</h4>
+<p>想象你有一桶颜料，每次发现一块陆地（<code>&#39;1&#39;</code>），就把整片相连的陆地都染成别的颜色（标记为已访问）。染完色的那片区域就是一座岛屿。重复这个过程，直到遍历完整个网格。</p>
+<h4>具体步骤</h4>
+<ol>
+<li><strong>遍历网格</strong>：逐个检查每个格子</li>
+<li><strong>发现陆地</strong>：如果遇到 <code>&#39;1&#39;</code>，说明发现了一座<strong>新岛屿</strong>（计数+1）</li>
+<li><strong>标记整片岛屿</strong>：使用 <strong>DFS</strong> 或 <strong>BFS</strong> 将与这块陆地相连的所有 <code>&#39;1&#39;</code> 标记为已访问（可改为 <code>&#39;0&#39;</code> 或其他标记）</li>
+<li><strong>继续遍历</strong>：重复步骤 1-3，直到遍历完所有格子</li>
+</ol>
+<h4>为什么是 DFS/BFS？</h4>
+<ul>
+<li><strong>DFS（深度优先搜索）</strong>：一条路走到黑，用递归或栈实现。适合代码简洁的场景。</li>
+<li><strong>BFS（广度优先搜索）</strong>：层层扩散，用队列实现。适合找最短路径的场景（本题两者皆可）。</li>
+</ul>
+<p>这里我用 <strong>DFS</strong>，代码更简洁直观。</p>
+<h4>DFS 过程图解</h4>
+<pre><code>初始网格：          发现第一个&#39;1&#39;，DFS染色：
+1 1 0              X X 0  (X表示已访问)
+1 1 0      →       X X 0
+0 0 1              0 0 1
+
+岛屿计数 = 1        继续遍历发现新的&#39;1&#39;，DFS染色：
+                   X X 0
+                   X X 0
+                   0 0 X
+
+                   岛屿计数 = 2
+</code></pre>
+<hr>
+<h3>📝 参考代码</h3>
+<pre><code class="language-python">from typing import List
+
+class Solution:
+    def numIslands(self, grid: List[List[str]]) -&gt; int:
+        &quot;&quot;&quot;
+        计算岛屿数量
+        使用 DFS 洪水填充算法
+        &quot;&quot;&quot;
+        if not grid or not grid[0]:
+            return 0
+        
+        m, n = len(grid), len(grid[0])
+        count = 0
+        
+        def dfs(i: int, j: int) -&gt; None:
+            &quot;&quot;&quot;
+            深度优先搜索：将(i,j)所在岛屿的所有陆地标记为已访问
+            &quot;&quot;&quot;
+            # 边界检查：超出网格范围
+            if i &lt; 0 or i &gt;= m or j &lt; 0 or j &gt;= n:
+                return
+            
+            # 终止条件：已经是水或已访问
+            if grid[i][j] != &#39;1&#39;:
+                return
+            
+            # 标记为已访问（染成水，避免重复计数）
+            grid[i][j] = &#39;0&#39;
+            
+            # 向四个方向扩散（上、下、左、右）
+            dfs(i - 1, j)  # 上
+            dfs(i + 1, j)  # 下
+            dfs(i, j - 1)  # 左
+            dfs(i, j + 1)  # 右
+        
+        # 遍历整个网格
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == &#39;1&#39;:
+                    # 发现新岛屿！
+                    count += 1
+                    # 将整个岛屿标记为已访问
+                    dfs(i, j)
+        
+        return count
+
+
+# ==================== 测试代码 ====================
+if __name__ == &quot;__main__&quot;:
+    sol = Solution()
+    
+    # 示例 1
+    grid1 = [
+        [&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;1&quot;,&quot;0&quot;],
+        [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;],
+        [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],
+        [&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;]
+    ]
+    print(f&quot;示例1: {sol.numIslands([row[:] for row in grid1])}&quot;)  # 预期: 1
+    
+    # 示例 2
+    grid2 = [
+        [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],
+        [&quot;1&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;,&quot;0&quot;],
+        [&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;0&quot;,&quot;0&quot;],
+        [&quot;0&quot;,&quot;0&quot;,&quot;0&quot;,&quot;1&quot;,&quot;1&quot;]
+    ]
+    print(f&quot;示例2: {sol.numIslands([row[:] for row in grid2])}&quot;)  # 预期: 3
+    
+    # 边界测试：全是水
+    grid3 = [[&quot;0&quot;,&quot;0&quot;],[&quot;0&quot;,&quot;0&quot;]]
+    print(f&quot;全是水: {sol.numIslands([row[:] for row in grid3])}&quot;)  # 预期: 0
+    
+    # 边界测试：全是陆地
+    grid4 = [[&quot;1&quot;,&quot;1&quot;],[&quot;1&quot;,&quot;1&quot;]]
+    print(f&quot;全是陆地: {sol.numIslands([row[:] for row in grid4])}&quot;)  # 预期: 1
+</code></pre>
+<h4>代码要点解析</h4>
+<ol>
+<li><p><strong>原地修改</strong>：我们将访问过的 <code>&#39;1&#39;</code> 直接改为 <code>&#39;0&#39;</code>，不需要额外的 <code>visited</code> 数组，空间复杂度更优。</p>
+</li>
+<li><p><strong>DFS 终止条件</strong>：</p>
+<ul>
+<li>越界检查（四个方向都要检查）</li>
+<li>遇到 <code>&#39;0&#39;</code> 或已访问的格子</li>
+</ul>
+</li>
+<li><p><strong>四个方向的优雅写法</strong>（可选）：</p>
+</li>
+</ol>
+<pre><code class="language-python">directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+for di, dj in directions:
+    dfs(i + di, j + dj)
+</code></pre>
+<hr>
+<h3>⏱️ 复杂度分析</h3>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>时间复杂度</strong></td>
+<td>O(M × N)</td>
+<td>每个格子最多被访问一次（DFS时）+ 遍历一次（主循环）</td>
+</tr>
+<tr>
+<td><strong>空间复杂度</strong></td>
+<td>O(M × N)</td>
+<td>最坏情况下递归栈深度（全是陆地，递归最深）</td>
+</tr>
+</tbody></table>
+<p><strong>空间优化说明</strong>：</p>
+<ul>
+<li>最优情况（没有陆地）：O(1)，只遍历不递归</li>
+<li>最坏情况（全是陆地）：O(M × N)，递归栈深度等于格子数</li>
+<li>平均情况：取决于岛屿分布</li>
+</ul>
+<hr>
+<h3>🔑 关键要点</h3>
+<ol>
+<li><p><strong>Flood Fill 思想</strong>：发现一片陆地，就&quot;淹没&quot;整片岛屿，避免重复计数</p>
+</li>
+<li><p><strong>方向数组</strong>：四连通问题（上下左右），注意边界检查</p>
+</li>
+<li><p><strong>标记已访问</strong>：</p>
+<ul>
+<li>原地修改（省空间）：<code>grid[i][j] = &#39;0&#39;</code></li>
+<li>额外数组（保留原数据）：<code>visited[i][j] = True</code></li>
+</ul>
+</li>
+<li><p><strong>DFS vs BFS</strong>：</p>
+<ul>
+<li>本题两者都可以，DFS代码更短</li>
+<li>如果题目要求&quot;最短的桥&quot;、&quot;最近距离&quot;等，优先用BFS</li>
+</ul>
+</li>
+<li><p><strong>常见变体</strong>：</p>
+<ul>
+<li>八连通（加四个对角线方向）</li>
+<li>求最大岛屿面积</li>
+<li>求岛屿周长</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3>📚 类似题目</h3>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>标题</th>
+<th>关联点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://leetcode.cn/problems/island-perimeter/">463</a></td>
+<td>岛屿周长</td>
+<td>岛屿问题的变体，计算边界</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/max-area-of-island/">695</a></td>
+<td>岛屿的最大面积</td>
+<td>同一套路，求面积而非计数</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/flood-fill/">733</a></td>
+<td>图像渲染</td>
+<td>经典的Flood Fill模板题</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/making-a-large-island/">827</a></td>
+<td>最大人工岛</td>
+<td>进阶题，改变一个0为1后的最大面积</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/number-of-closed-islands/">1254</a></td>
+<td>统计封闭岛屿的数目</td>
+<td>边界上的不算</td>
+</tr>
+<tr>
+<td><a href="https://leetcode.cn/problems/count-sub-islands/">1905</a></td>
+<td>统计子岛屿</td>
+<td>两个网格对比</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>💭 面试 Tips</h3>
+<p><strong>面试官可能会问：</strong></p>
+<ol>
+<li><p><strong>如何优化空间复杂度？</strong></p>
+<ul>
+<li>答：已经用了原地修改，是O(1)额外空间。如果要求不能修改原数组，就用visited数组。</li>
+</ul>
+</li>
+<li><p><strong>如果网格很大，递归会栈溢出怎么办？</strong></p>
+<ul>
+<li>答：改用BFS + 队列，或者用显式栈模拟递归。</li>
+</ul>
+</li>
+<li><p><strong>如果是对角线也算连通呢？</strong></p>
+<ul>
+<li>答：directions数组加四个对角方向 <code>(±1, ±1)</code>。</li>
+</ul>
+</li>
+<li><p><strong>并查集(Union-Find)能做吗？</strong></p>
+<ul>
+<li>答：可以，把所有相邻的1合并，最后统计集合数量。时间复杂度也是O(M×N)，但常数更大。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p><em>生成时间: 2026-03-14 20:16</em>
+<em>题号: 200 | 难度: Medium | 算法: DFS/BFS</em></p>
+
+    </div>
+  </div>
+  
+</body>
+</html>

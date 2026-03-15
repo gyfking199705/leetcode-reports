@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "name": "leetcode-reports",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ]
+}

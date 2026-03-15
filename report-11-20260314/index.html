@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#11 盛最多水的容器 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h2>🎯 LeetCode 精讲 #11 - 盛最多水的容器</h2>
+<hr>
+<h3>📋 题目描述</h3>
+<p><strong>来源</strong>: LeetCode 第11题<br><strong>难度</strong>: Medium<br><strong>链接</strong>: <a href="https://leetcode.cn/problems/container-with-most-water/">https://leetcode.cn/problems/container-with-most-water/</a></p>
+<h4>题目原文</h4>
+<blockquote>
+<p>给定一个长度为 <code>n</code> 的整数数组 <code>height</code> 。有 <code>n</code> 条垂线，第 <code>i</code> 条线的两个端点是 <code>(i, 0)</code> 和 <code>(i, height[i])</code> 。</p>
+<p>找出其中的两条线，使得它们与 x 轴共同构成的容器可以容纳最多的水。</p>
+<p>返回容器可以储存的最大水量。</p>
+<p><strong>说明</strong>：你不能倾斜容器。</p>
+</blockquote>
+<h4>示例</h4>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: height = [1,8,6,2,5,4,8,3,7]
+输出: 49
+解释: 第1条线(高度8)和第8条线(高度7)之间的容器，宽度为7，高度为min(8,7)=7
+      面积为 7 × 7 = 49
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: height = [1,1]
+输出: 1
+</code></pre>
+<p><strong>示例 3:</strong></p>
+<pre><code>输入: height = [4,3,2,1,4]
+输出: 16
+解释: 第0条线和第4条线，宽度4，高度min(4,4)=4，面积16
+</code></pre>
+<h4>约束条件</h4>
+<ul>
+<li><code>n == height.length</code></li>
+<li><code>2 &lt;= n &lt;= 10^5</code></li>
+<li><code>0 &lt;= height[i] &lt;= 10^4</code></li>
+</ul>
+<hr>
+<h3>💡 解题思路</h3>
+<h4>方法一：暴力枚举（不推荐）</h4>
+<p><strong>思路描述</strong>：</p>
+<ul>
+<li>枚举所有可能的左右边界组合</li>
+<li>计算每对边界形成的容器面积</li>
+<li>取最大值</li>
+</ul>
+<p><strong>面积计算公式</strong>：</p>
+<pre><code>面积 = min(height[left], height[right]) × (right - left)
+</code></pre>
+<p><strong>时间复杂度</strong>：O(n²) —— 会超时！</p>
+<hr>
+<h4>方法二：双指针法 ⭐ 推荐</h4>
+<p><strong>核心思想</strong>：</p>
+<blockquote>
+<p>容器的容量由<strong>较短的板子</strong>决定。让两个指针从两端向中间移动，每次移动<strong>较短</strong>的那一端，才有可能找到更大的面积。</p>
+</blockquote>
+<p><strong>为什么移动较短端？</strong></p>
+<p>假设当前左指针在位置 <code>L</code>，右指针在位置 <code>R</code>：</p>
+<ul>
+<li>当前面积 = <code>min(height[L], height[R]) × (R - L)</code></li>
+<li>如果 <code>height[L] &lt; height[R]</code>（左端较短）</li>
+</ul>
+<p><strong>移动右指针的情况</strong>：</p>
+<ul>
+<li>新宽度 <code>(R&#39; - L)</code> 一定变小（因为R左移了）</li>
+<li>新高度 <code>min(height[L], height[R&#39;])</code> ≤ <code>height[L]</code>（因为左端已经是短板）</li>
+<li>所以新面积一定<strong>小于等于</strong>原面积！</li>
+</ul>
+<p><strong>移动左指针的情况</strong>：</p>
+<ul>
+<li>虽然宽度也变小，但<strong>高度有可能变大</strong></li>
+<li>如果 <code>height[L&#39;] &gt; height[L]</code>，面积就有可能变大！</li>
+</ul>
+<p><strong>结论</strong>：只有移动较短端，才有可能获得更大的面积。</p>
+<p><strong>算法步骤</strong>：</p>
+<ol>
+<li>初始化左指针 <code>left = 0</code>，右指针 <code>right = n - 1</code></li>
+<li>计算当前面积，更新最大值</li>
+<li>比较 <code>height[left]</code> 和 <code>height[right]</code>：<ul>
+<li>如果 <code>height[left] &lt; height[right]</code>：<code>left++</code></li>
+<li>否则：<code>right--</code></li>
+</ul>
+</li>
+<li>重复步骤2-3，直到 <code>left &gt;= right</code></li>
+</ol>
+<hr>
+<h3>📝 参考代码</h3>
+<pre><code class="language-python">class Solution:
+    def maxArea(self, height: List[int]) -&gt; int:
+        &quot;&quot;&quot;
+        双指针法求解盛最多水的容器问题
+        
+        思路：
+        - 使用左右双指针从两端向中间移动
+        - 每次移动较短的那一端，才有可能找到更大的面积
+        - 因为面积受限于较短的边，移动短边才可能找到更高的边
+        
+        Args:
+            height: 整数数组，表示每条线的高度
+            
+        Returns:
+            能容纳的最大水量（最大面积）
+        &quot;&quot;&quot;
+        left, right = 0, len(height) - 1
+        max_area = 0
+        
+        while left &lt; right:
+            # 计算当前容器的宽度
+            width = right - left
+            
+            # 容器的高度由较短的板子决定
+            current_height = min(height[left], height[right])
+            
+            # 计算当前面积
+            current_area = width * current_height
+            
+            # 更新最大面积
+            max_area = max(max_area, current_area)
+            
+            # 移动较短的那一端的指针
+            # 为什么？因为面积受限于较短的边，只有移动短边才可能找到更高的边
+            if height[left] &lt; height[right]:
+                # 左端较短，向左移动左指针
+                left += 1
+            else:
+                # 右端较短（或相等），向右移动右指针
+                right -= 1
+        
+        return max_area
+
+
+# 更简洁的写法
+class Solution:
+    def maxArea(self, height: List[int]) -&gt; int:
+        left, right = 0, len(height) - 1
+        max_area = 0
+        
+        while left &lt; right:
+            # 一行计算面积并更新最大值
+            max_area = max(max_area, 
+                          (right - left) * min(height[left], height[right]))
+            
+            # 移动较短端的指针
+            if height[left] &lt; height[right]:
+                left += 1
+            else:
+                right -= 1
+        
+        return max_area
+</code></pre>
+<p><strong>测试代码</strong>：</p>
+<pre><code class="language-python">def test():
+    sol = Solution()
+    
+    # 测试用例1
+    height1 = [1, 8, 6, 2, 5, 4, 8, 3, 7]
+    assert sol.maxArea(height1) == 49, f&quot;Test 1 failed: expected 49, got {sol.maxArea(height1)}&quot;
+    print(f&quot;✅ Test 1 passed: {height1} -&gt; 49&quot;)
+    
+    # 测试用例2
+    height2 = [1, 1]
+    assert sol.maxArea(height2) == 1, f&quot;Test 2 failed: expected 1, got {sol.maxArea(height2)}&quot;
+    print(f&quot;✅ Test 2 passed: {height2} -&gt; 1&quot;)
+    
+    # 测试用例3
+    height3 = [4, 3, 2, 1, 4]
+    assert sol.maxArea(height3) == 16, f&quot;Test 3 failed: expected 16, got {sol.maxArea(height3)}&quot;
+    print(f&quot;✅ Test 3 passed: {height3} -&gt; 16&quot;)
+    
+    # 测试用例4：递增数组
+    height4 = [1, 2, 3, 4, 5]
+    result4 = sol.maxArea(height4)
+    print(f&quot;✅ Test 4 passed: {height4} -&gt; {result4} (两端的1和5，面积4)&quot;)
+    
+    # 测试用例5：递减数组
+    height5 = [5, 4, 3, 2, 1]
+    result5 = sol.maxArea(height5)
+    print(f&quot;✅ Test 5 passed: {height5} -&gt; {result5} (两端的5和1，面积4)&quot;)
+    
+    print(&quot;\n🎉 所有测试通过！&quot;)
+
+# 运行测试
+test()
+</code></pre>
+<hr>
+<h3>⏱️ 复杂度分析</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力枚举</td>
+<td>O(n²)</td>
+<td>O(1)</td>
+<td>会超时，不推荐</td>
+</tr>
+<tr>
+<td><strong>双指针</strong> ⭐</td>
+<td><strong>O(n)</strong></td>
+<td><strong>O(1)</strong></td>
+<td><strong>最优解法</strong></td>
+</tr>
+</tbody></table>
+<p><strong>双指针分析</strong>：</p>
+<ul>
+<li><strong>时间复杂度 O(n)</strong>：左右指针最多各移动 n 次，总共最多 2n 次操作</li>
+<li><strong>空间复杂度 O(1)</strong>：只使用了常数个变量</li>
+</ul>
+<hr>
+<h3>🔑 关键要点</h3>
+<ol>
+<li><p><strong>核心洞察</strong>：</p>
+<ul>
+<li>容器面积 = <code>min(左高, 右高) × 宽度</code></li>
+<li>宽度在缩小过程中是单调递减的</li>
+</ul>
+</li>
+<li><p><strong>移动策略</strong>：</p>
+<ul>
+<li>移动较长端：新面积一定 ≤ 原面积（宽度↓，高度≤原高度）</li>
+<li>移动较短端：才有可能找到更大的高度，从而可能得到更大面积</li>
+</ul>
+</li>
+<li><p><strong>为什么正确？</strong></p>
+<ul>
+<li>双指针不会错过最优解</li>
+<li>对于任意最优解 <code>(i, j)</code>，当两个指针分别位于 <code>i</code> 和 <code>j</code> 时一定会被考虑到</li>
+</ul>
+</li>
+<li><p><strong>易错点</strong>：</p>
+<ul>
+<li>忘记用 <code>min()</code> 取两边高度的较小值</li>
+<li>混淆左右指针的移动条件</li>
+</ul>
+</li>
+<li><p><strong>面试常问</strong>：</p>
+<ul>
+<li>&quot;为什么移动较短的那一端？&quot; —— 这是考察理解深度的核心问题</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3>📚 类似题目</h3>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>题目</th>
+<th>解法</th>
+<th>关联度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>#42</td>
+<td>接雨水</td>
+<td>双指针 / 单调栈</td>
+<td>⭐⭐⭐ 同样是水相关，但思路不同</td>
+</tr>
+<tr>
+<td>#15</td>
+<td>三数之和</td>
+<td>双指针</td>
+<td>⭐⭐⭐ 排序+双指针经典组合</td>
+</tr>
+<tr>
+<td>#167</td>
+<td>两数之和 II</td>
+<td>双指针</td>
+<td>⭐⭐⭐ 有序数组双指针</td>
+</tr>
+<tr>
+<td>#560</td>
+<td>和为K的子数组</td>
+<td>前缀和+哈希</td>
+<td>⭐⭐ 同样是数组区间问题</td>
+</tr>
+<tr>
+<td>#239</td>
+<td>滑动窗口最大值</td>
+<td>单调队列</td>
+<td>⭐⭐ 区间最值问题</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>🎨 可视化理解</h3>
+<pre><code>height = [1, 8, 6, 2, 5, 4, 8, 3, 7]
+          0  1  2  3  4  5  6  7  8
+
+初始状态：
+    |                           |
+    |                           |
+    |                           |     |
+    |     |                     |     |
+    |     |     |               |     |
+    |     |     |     |         |     |
+    |     |     |     |     |   |     |
+    |     |     |     |     |   |     |
+    |_____|_____|_____|_____|___|_____|
+    0     1                       8    
+    left                       right
+    面积 = min(1, 7) × 8 = 8
+
+最优解（left=1, right=8）：
+          |                       |
+          |                       |
+          |                       |     |
+    |     |                       |     |
+    |     |                       |     |
+    |     |                       |     |
+    |     |                       |     |
+    |     |                       |     |
+    |_____|_______________________|_____|
+          1                       8
+    面积 = min(8, 7) × 7 = 49 ✅
+</code></pre>
+<hr>
+<h3>💬 面试官视角</h3>
+<p>这道题是典型的<strong>双指针入门题</strong>，考察点：</p>
+<ol>
+<li>能否想到双指针解法（而不是暴力）</li>
+<li>能否讲清楚<strong>为什么移动较短端</strong></li>
+<li>能否分析时间/空间复杂度</li>
+</ol>
+<p><strong>进阶追问</strong>：</p>
+<ul>
+<li>&quot;如果要求输出是哪两条线怎么办？&quot; —— 记录最大面积时的左右索引</li>
+<li>&quot;如果有多个最优解怎么办？&quot; —— 可以返回所有满足条件的索引对</li>
+</ul>
+<hr>
+<p>生成时间: 2026-03-14 20:46<br>题号: #11 - 盛最多水的容器</p>
+
+    </div>
+  </div>
+  
+</body>
+</html>

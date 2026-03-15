@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#1 两数之和 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h2>🎯 LeetCode 精讲 #1 - 两数之和</h2>
+<hr>
+<h3>📋 题目描述</h3>
+<p><strong>来源</strong>: LeetCode 第1题<br><strong>难度</strong>: Easy<br><strong>链接</strong>: <a href="https://leetcode.cn/problems/two-sum/">https://leetcode.cn/problems/two-sum/</a></p>
+<h4>题目原文</h4>
+<blockquote>
+<p>给定一个整数数组 <code>nums</code> 和一个整数目标值 <code>target</code>，请你在该数组中找出 <strong>和为目标值</strong> <em>target</em> 的那 <strong>两个</strong> 整数，并返回它们的数组下标。</p>
+<p>你可以假设每种输入只会对应一个答案。但是，数组中同一个元素在答案里不能重复出现。</p>
+<p>你可以按任意顺序返回答案。</p>
+</blockquote>
+<h4>示例</h4>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: nums = [2, 7, 11, 15], target = 9
+输出: [0, 1]
+解释: 因为 nums[0] + nums[1] == 9，返回 [0, 1]。
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: nums = [3, 2, 4], target = 6
+输出: [1, 2]
+</code></pre>
+<p><strong>示例 3:</strong></p>
+<pre><code>输入: nums = [3, 3], target = 6
+输出: [0, 1]
+</code></pre>
+<h4>约束条件</h4>
+<ul>
+<li><code>2 &lt;= nums.length &lt;= 10^4</code></li>
+<li><code>-10^9 &lt;= nums[i] &lt;= 10^9</code></li>
+<li><code>-10^9 &lt;= target &lt;= 10^9</code></li>
+<li>只会存在一个有效答案</li>
+</ul>
+<hr>
+<h3>💡 解题思路</h3>
+<h4>方法一：暴力枚举（Brute Force）</h4>
+<p><strong>思路描述:</strong>
+枚举数组中的每一个数 <code>x</code>，寻找数组中是否存在 <code>target - x</code>。</p>
+<p><strong>详细分析:</strong></p>
+<ol>
+<li>使用两层循环，外层循环遍历每个元素 <code>nums[i]</code></li>
+<li>内层循环遍历 <code>i</code> 之后的元素 <code>nums[j]</code></li>
+<li>检查是否满足 <code>nums[i] + nums[j] == target</code></li>
+<li>如果找到，返回 <code>[i, j]</code></li>
+</ol>
+<p><strong>时间复杂度</strong>: O(n²) — 两层嵌套循环<br><strong>空间复杂度</strong>: O(1) — 只使用了常数额外空间</p>
+<h4>方法二：哈希表（Hash Table）⭐ 推荐</h4>
+<p><strong>思路描述:</strong>
+利用哈希表快速查找的特性，将&quot;寻找 target - x&quot;的时间复杂度从 O(n) 降到 O(1)。</p>
+<p><strong>详细分析:</strong></p>
+<ol>
+<li>创建一个哈希表 <code>num_to_index</code>，用于存储「数值 → 下标」的映射</li>
+<li>遍历数组，对于当前元素 <code>nums[i]</code>：<ul>
+<li>计算 <code>complement = target - nums[i]</code>（即我们需要找的另一个数）</li>
+<li>在哈希表中查找 <code>complement</code> 是否存在</li>
+<li>如果存在，说明找到了答案，返回 <code>[哈希表中存的补数下标, i]</code></li>
+<li>如果不存在，将 <code>nums[i]</code> 和其下标 <code>i</code> 存入哈希表</li>
+</ul>
+</li>
+<li>继续遍历直到找到答案</li>
+</ol>
+<p><strong>为什么这样是可行的？</strong></p>
+<ul>
+<li>哈希表的查找操作平均时间复杂度是 O(1)</li>
+<li>每遍历到一个新元素，我们先查「需要的数」是否存在，再把自己存进去</li>
+<li>这样确保不会用到同一个元素两次（先查再存）</li>
+</ul>
+<p><strong>时间复杂度</strong>: O(n) — 只遍历一次数组，每次哈希操作 O(1)<br><strong>空间复杂度</strong>: O(n) — 哈希表最多存储 n 个元素</p>
+<hr>
+<h3>📝 参考代码</h3>
+<h4>Python 实现（哈希表解法）</h4>
+<pre><code class="language-python">class Solution:
+    def twoSum(self, nums: List[int], target: int) -&gt; List[int]:
+        &quot;&quot;&quot;
+        两数之和 - 哈希表解法
+        
+        思路：利用哈希表存储已遍历的元素，将查找时间从O(n)降到O(1)
+        
+        参数:
+            nums: 整数数组
+            target: 目标和
+            
+        返回:
+            两个数的下标列表
+        &quot;&quot;&quot;
+        # 哈希表：数值 -&gt; 下标
+        num_to_index = {}
+        
+        # 遍历数组
+        for i, num in enumerate(nums):
+            # 计算需要的补数
+            complement = target - num
+            
+            # 检查补数是否已在哈希表中
+            if complement in num_to_index:
+                # 找到了！返回两个下标
+                return [num_to_index[complement], i]
+            
+            # 将当前数存入哈希表，供后续元素查找
+            num_to_index[num] = i
+        
+        # 根据题意，一定有解，这里不会执行到
+        return []
+
+
+# ============ 测试代码 ============
+if __name__ == &quot;__main__&quot;:
+    solution = Solution()
+    
+    # 测试用例1
+    nums1, target1 = [2, 7, 11, 15], 9
+    print(f&quot;测试1: nums={nums1}, target={target1}&quot;)
+    print(f&quot;结果: {solution.twoSum(nums1, target1)}&quot;)  # 期望: [0, 1]
+    
+    # 测试用例2
+    nums2, target2 = [3, 2, 4], 6
+    print(f&quot;测试2: nums={nums2}, target={target2}&quot;)
+    print(f&quot;结果: {solution.twoSum(nums2, target2)}&quot;)  # 期望: [1, 2]
+    
+    # 测试用例3 - 重复元素
+    nums3, target3 = [3, 3], 6
+    print(f&quot;测试3: nums={nums3}, target={target3}&quot;)
+    print(f&quot;结果: {solution.twoSum(nums3, target3)}&quot;)  # 期望: [0, 1]
+    
+    # 测试用例4 - 负数
+    nums4, target4 = [-1, -2, -3, -4, -5], -8
+    print(f&quot;测试4: nums={nums4}, target={target4}&quot;)
+    print(f&quot;结果: {solution.twoSum(nums4, target4)}&quot;)  # 期望: [2, 4]
+</code></pre>
+<h4>暴力枚举解法（对比）</h4>
+<pre><code class="language-python">class SolutionBruteForce:
+    def twoSum(self, nums: List[int], target: int) -&gt; List[int]:
+        &quot;&quot;&quot;
+        暴力枚举解法 - 时间O(n²)，空间O(1)
+        &quot;&quot;&quot;
+        n = len(nums)
+        for i in range(n):
+            for j in range(i + 1, n):
+                if nums[i] + nums[j] == target:
+                    return [i, j]
+        return []
+</code></pre>
+<h4>其他语言参考</h4>
+<p><strong>Java:</strong></p>
+<pre><code class="language-java">class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;();
+        for (int i = 0; i &lt; nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i };
+            }
+            map.put(nums[i], i);
+        }
+        return new int[0];
+    }
+}
+</code></pre>
+<p><strong>C++:</strong></p>
+<pre><code class="language-cpp">class Solution {
+public:
+    vector&lt;int&gt; twoSum(vector&lt;int&gt;&amp; nums, int target) {
+        unordered_map&lt;int, int&gt; mp;
+        for (int i = 0; i &lt; nums.size(); i++) {
+            int complement = target - nums[i];
+            if (mp.count(complement)) {
+                return {mp[complement], i};
+            }
+            mp[nums[i]] = i;
+        }
+        return {};
+    }
+};
+</code></pre>
+<hr>
+<h3>⏱️ 复杂度分析</h3>
+<table>
+<thead>
+<tr>
+<th>解法</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>暴力枚举</td>
+<td>O(n²)</td>
+<td>O(1)</td>
+<td>n 很小（&lt;1000），空间受限</td>
+</tr>
+<tr>
+<td>哈希表</td>
+<td><strong>O(n)</strong></td>
+<td><strong>O(n)</strong></td>
+<td><strong>通用推荐</strong>，时间和空间平衡</td>
+</tr>
+</tbody></table>
+<p><strong>详细说明:</strong></p>
+<ul>
+<li><strong>时间 O(n)</strong>: 只需遍历数组一次，哈希表的插入和查找都是 O(1) 平均时间</li>
+<li><strong>空间 O(n)</strong>: 最坏情况下需要将数组中 n-1 个元素存入哈希表</li>
+</ul>
+<hr>
+<h3>🔑 关键要点</h3>
+<ol>
+<li><p><strong>哈希表是核心</strong>: 这道题是「空间换时间」的经典案例，哈希表将查找复杂度从 O(n) 降到 O(1)</p>
+</li>
+<li><p><strong>先查后存</strong>: 顺序很重要！</p>
+<ul>
+<li>先检查 <code>complement</code> 是否在表中（避免用到当前元素）</li>
+<li>再将当前元素存入表中（供后续元素使用）</li>
+</ul>
+</li>
+<li><p><strong>边界情况处理</strong>:</p>
+<ul>
+<li>✅ 数组中有重复数字（如 <code>[3, 3]</code>）</li>
+<li>✅ 负数（如 <code>[-1, -2, -3]</code>）</li>
+<li>✅ 大数值（在 int 范围内均可）</li>
+</ul>
+</li>
+<li><p><strong>为什么不用排序+双指针？</strong></p>
+<ul>
+<li>排序后原数组下标会丢失</li>
+<li>虽然能做到 O(nlogn)，但需要额外存储原下标</li>
+<li>哈希表 O(n) 更优</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3>📚 类似题目</h3>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>题目</th>
+<th>难度</th>
+<th>关联点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>15</td>
+<td>三数之和</td>
+<td>Medium</td>
+<td>两数之和的扩展，固定一个数，转化为两数之和</td>
+</tr>
+<tr>
+<td>16</td>
+<td>最接近的三数之和</td>
+<td>Medium</td>
+<td>类似思路，双指针逼近</td>
+</tr>
+<tr>
+<td>167</td>
+<td>两数之和 II - 输入有序数组</td>
+<td>Medium</td>
+<td>数组已排序，可用双指针</td>
+</tr>
+<tr>
+<td>170</td>
+<td>两数之和 III - 数据结构设计</td>
+<td>Easy</td>
+<td>设计一个支持 add/find 的数据结构</td>
+</tr>
+<tr>
+<td>653</td>
+<td>两数之和 IV - 输入 BST</td>
+<td>Easy</td>
+<td>在二叉搜索树中找两数之和</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>🎓 面试Tips</h3>
+<ol>
+<li><strong>这道题通常是面试第一题</strong>，考察基础编码能力</li>
+<li>先说出暴力解法（展示思维完整性），再优化到哈希表</li>
+<li>注意询问：数组是否有序？有重复元素吗？</li>
+<li>这道题是后续「三数之和」的基础，建议熟练掌握</li>
+</ol>
+<hr>
+<p><em>生成时间: 2026-03-14 18:46</em><br><em>来源: LeetCode 每日精讲</em></p>
+
+    </div>
+  </div>
+  
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#215 数组中的第K个最大元素 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h2>🎯 LeetCode 精讲 #215 - 数组中的第K个最大元素</h2>
+<hr>
+<h3>📋 题目描述</h3>
+<p>给定整数数组 <code>nums</code> 和整数 <code>k</code>，请返回数组中第 <code>k</code> 个最大的元素。</p>
+<p>请注意，你需要找的是数组排序后的第 <code>k</code> 个最大的元素，而不是第 <code>k</code> 个不同的元素。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入: [3,2,1,5,6,4], k = 2
+输出: 5
+解释: 排序后数组为 [1,2,3,4,5,6]，第2大的元素是5
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入: [3,2,3,1,2,4,5,5,6], k = 4
+输出: 4
+解释: 排序后数组为 [1,2,2,3,3,4,5,5,6]，第4大的元素是4
+</code></pre>
+<p><strong>提示：</strong></p>
+<ul>
+<li><code>1 &lt;= k &lt;= nums.length &lt;= 10^5</code></li>
+<li><code>-10^4 &lt;= nums[i] &lt;= 10^4</code></li>
+</ul>
+<hr>
+<h3>💡 解题思路</h3>
+<h4>方法一：排序（最直观）</h4>
+<p><strong>核心思想</strong>：直接排序，取倒数第k个元素</p>
+<ul>
+<li>时间复杂度：O(n log n)</li>
+<li>空间复杂度：O(1) 或 O(log n)（取决于排序算法）</li>
+</ul>
+<pre><code class="language-python">def findKthLargest(nums, k):
+    nums.sort()
+    return nums[-k]
+</code></pre>
+<p>这个方法简单直接，但不是最优解。</p>
+<hr>
+<h4>方法二：最小堆 ⭐ 推荐（面试常考）</h4>
+<p><strong>核心思想</strong>：维护一个大小为k的最小堆，堆顶就是第k大的元素</p>
+<p><strong>详细解释</strong>：</p>
+<p>想象你有k个&quot;名额&quot;，你要找的是第k大的数。维护一个大小为k的小根堆：</p>
+<ol>
+<li><strong>堆的性质</strong>：小根堆的堆顶是所有元素中最小的</li>
+<li><strong>维护过程</strong>：<ul>
+<li>遍历数组，先将前k个元素放入堆中</li>
+<li>对于剩下的每个元素：<ul>
+<li>如果当前元素 <strong>大于</strong> 堆顶，说明这个元素有资格进入前k大</li>
+<li>弹出堆顶（当前k个中最小的），放入当前元素</li>
+</ul>
+</li>
+<li>遍历结束后，堆中保留的就是数组中最大的k个元素</li>
+<li>堆顶就是这k个中最小的，即第k大的元素</li>
+</ul>
+</li>
+</ol>
+<p><strong>为什么这样是对的？</strong></p>
+<ul>
+<li>堆中始终保持k个元素，是迄今为止见过的最大的k个数</li>
+<li>堆顶是这k个数中最小的</li>
+<li>任何比堆顶小的数都不可能进入前k大</li>
+</ul>
+<hr>
+<h4>方法三：快速选择 ⭐⭐ 最优解（面试加分项）</h4>
+<p><strong>核心思想</strong>：利用快速排序的partition思想，平均O(n)时间复杂度</p>
+<p><strong>详细解释</strong>：</p>
+<p>快速排序的partition操作会将数组分为两部分：</p>
+<ul>
+<li><code>nums[left...p-1]</code> &lt; <code>pivot</code>（基准值）</li>
+<li><code>nums[p]</code> = <code>pivot</code></li>
+<li><code>nums[p+1...right]</code> &gt; <code>pivot</code></li>
+</ul>
+<p>我们需要找第k大的元素，即排序后索引为 <code>n-k</code> 的元素（0-based）。</p>
+<p><strong>算法步骤</strong>：</p>
+<ol>
+<li>随机选择一个pivot（避免最坏情况）</li>
+<li>进行partition，将pivot放到正确位置 <code>p</code></li>
+<li>比较 <code>p</code> 与 <code>n-k</code>：<ul>
+<li>如果 <code>p == n-k</code>：找到了！返回 <code>nums[p]</code></li>
+<li>如果 <code>p &lt; n-k</code>：目标在右半部分，递归右边</li>
+<li>如果 <code>p &gt; n-k</code>：目标在左半部分，递归左边</li>
+</ul>
+</li>
+</ol>
+<p><strong>为什么平均是O(n)？</strong></p>
+<ul>
+<li>每次partition大约将搜索范围减半</li>
+<li>期望比较次数：n + n/2 + n/4 + ... ≈ 2n</li>
+<li>因此是O(n)时间复杂度</li>
+</ul>
+<hr>
+<h3>📝 参考代码</h3>
+<h4>Python - 最小堆解法</h4>
+<pre><code class="language-python">import heapq
+from typing import List
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -&gt; int:
+        &quot;&quot;&quot;
+        最小堆解法：维护大小为k的堆
+        时间复杂度：O(n log k)
+        空间复杂度：O(k)
+        &quot;&quot;&quot;
+        # 使用heapq创建最小堆（默认）
+        # 方法：先将前k个元素入堆，然后维护堆的大小为k
+        
+        min_heap = nums[:k]  # 取前k个元素
+        heapq.heapify(min_heap)  # 建堆，O(k)
+        
+        # 遍历剩下的元素
+        for num in nums[k:]:
+            # 如果当前元素大于堆顶，替换
+            if num &gt; min_heap[0]:
+                heapq.heapreplace(min_heap, num)
+                # heapreplace = pop then push，比先heappop再heappush效率高
+        
+        # 堆顶就是第k大的元素
+        return min_heap[0]
+</code></pre>
+<h4>Python - 快速选择解法（最优）</h4>
+<pre><code class="language-python">import random
+from typing import List
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -&gt; int:
+        &quot;&quot;&quot;
+        快速选择算法：平均O(n)时间复杂度
+        类似快速排序的partition思想
+        &quot;&quot;&quot;
+        n = len(nums)
+        # 第k大 = 排序后索引为 n-k 的元素（从小到大排序）
+        return self.quickSelect(nums, 0, n - 1, n - k)
+    
+    def quickSelect(self, nums: List[int], left: int, right: int, target_idx: int) -&gt; int:
+        &quot;&quot;&quot;
+        在nums[left:right+1]中找到第target_idx小的元素
+        &quot;&quot;&quot;
+        if left == right:
+            return nums[left]
+        
+        # 随机选择pivot，避免最坏情况O(n²)
+        pivot_idx = random.randint(left, right)
+        
+        # 将pivot放到最右边
+        nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]
+        
+        # partition操作：将&lt;pivot的放左边，&gt;pivot的放右边
+        store_idx = left
+        for i in range(left, right):
+            if nums[i] &lt; nums[right]:  # 当前元素小于pivot
+                nums[store_idx], nums[i] = nums[i], nums[store_idx]
+                store_idx += 1
+        
+        # 将pivot放到正确位置
+        nums[store_idx], nums[right] = nums[right], nums[store_idx]
+        
+        # 现在pivot在store_idx位置
+        if store_idx == target_idx:
+            return nums[store_idx]
+        elif store_idx &lt; target_idx:
+            # 目标在右半部分
+            return self.quickSelect(nums, store_idx + 1, right, target_idx)
+        else:
+            # 目标在左半部分
+            return self.quickSelect(nums, left, store_idx - 1, target_idx)
+</code></pre>
+<h4>Python - 快速选择（迭代版，避免递归栈溢出）</h4>
+<pre><code class="language-python">import random
+from typing import List
+
+class Solution:
+    def findKthLargest(self, nums: List[int], k: int) -&gt; int:
+        &quot;&quot;&quot;
+        快速选择 - 迭代实现
+        &quot;&quot;&quot;
+        n = len(nums)
+        target_idx = n - k  # 转换为第target_idx小（0-based）
+        
+        left, right = 0, n - 1
+        
+        while True:
+            if left == right:
+                return nums[left]
+            
+            # 随机选择pivot并partition
+            pivot_idx = random.randint(left, right)
+            nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]
+            
+            store_idx = left
+            for i in range(left, right):
+                if nums[i] &lt; nums[right]:
+                    nums[store_idx], nums[i] = nums[i], nums[store_idx]
+                    store_idx += 1
+            
+            nums[store_idx], nums[right] = nums[right], nums[store_idx]
+            
+            if store_idx == target_idx:
+                return nums[store_idx]
+            elif store_idx &lt; target_idx:
+                left = store_idx + 1
+            else:
+                right = store_idx - 1
+</code></pre>
+<hr>
+<h3>⏱️ 复杂度分析</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>时间复杂度</th>
+<th>空间复杂度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>排序</td>
+<td>O(n log n)</td>
+<td>O(1) / O(log n)</td>
+<td>简单但非最优</td>
+</tr>
+<tr>
+<td>最小堆</td>
+<td>O(n log k)</td>
+<td>O(k)</td>
+<td>k较小时效率高，面试推荐</td>
+</tr>
+<tr>
+<td>快速选择（平均）</td>
+<td><strong>O(n)</strong></td>
+<td>O(1)</td>
+<td>理论最优，面试加分</td>
+</tr>
+<tr>
+<td>快速选择（最坏）</td>
+<td>O(n²)</td>
+<td>O(n)</td>
+<td>随机化可避免</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>🔑 关键要点</h3>
+<ol>
+<li><p><strong>最小堆的直觉</strong>：</p>
+<ul>
+<li>堆顶是&quot;门槛&quot;，只有比它大的才有资格进入前k</li>
+<li>遍历完数组，堆中就是最大的k个数</li>
+<li>堆顶是这k个中最小的，即第k大</li>
+</ul>
+</li>
+<li><p><strong>快速选择的核心</strong>：</p>
+<ul>
+<li>partition后，pivot的位置就是最终排序后的位置</li>
+<li>根据pivot位置与目标索引的关系，决定递归哪一半</li>
+<li>平均每次处理一半数据，总复杂度O(n)</li>
+</ul>
+</li>
+<li><p><strong>面试技巧</strong>：</p>
+<ul>
+<li>先写最小堆解法，展示基础扎实</li>
+<li>再提快速选择，展示深入理解</li>
+<li>强调随机化避免最坏情况</li>
+</ul>
+</li>
+<li><p><strong>常见陷阱</strong>：</p>
+<ul>
+<li>第k大 ≠ 第k小，注意索引转换（n-k）</li>
+<li>快速选择非原地实现时，注意空间复杂度</li>
+<li>边界条件：k=1（最大值）、k=n（最小值）</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3>📚 类似题目</h3>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>标题</th>
+<th>关联点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>#347</td>
+<td>前K个高频元素</td>
+<td>同样用最小堆/快速选择</td>
+</tr>
+<tr>
+<td>#973</td>
+<td>最接近原点的K个点</td>
+<td>最小堆应用</td>
+</tr>
+<tr>
+<td>#692</td>
+<td>前K个高频单词</td>
+<td>堆 + 哈希表</td>
+</tr>
+<tr>
+<td>#4</td>
+<td>寻找两个正序数组的中位数</td>
+<td>二分思想，可转化为第k小问题</td>
+</tr>
+<tr>
+<td>#324</td>
+<td>摆动排序 II</td>
+<td>快速选择找中位数</td>
+</tr>
+<tr>
+<td>#75</td>
+<td>颜色分类</td>
+<td>双指针partition思想</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>🎓 扩展思考</h3>
+<p><strong>如果数组非常大（无法全部放入内存），怎么办？</strong></p>
+<ul>
+<li>使用<strong>蓄水池抽样</strong>或<strong>外部排序</strong></li>
+<li>或者使用<strong>桶排序</strong>思想（知道数据范围时）</li>
+</ul>
+<p><strong>如果需要找中位数？</strong></p>
+<ul>
+<li>中位数就是第 <code>n//2</code> 大（或第 <code>(n+1)//2</code> 大）</li>
+<li>同样可以用快速选择O(n)解决</li>
+</ul>
+<p><strong>如果要求第k大和第m大的元素？</strong></p>
+<ul>
+<li>最小堆：一次遍历得到两个结果</li>
+<li>快速选择：两次调用，或一次找较小的那个，另一次在相应区间找</li>
+</ul>
+<hr>
+<blockquote>
+<p>💡 <strong>今日要点</strong>：掌握最小堆和快速选择两种方法，面试时先讲堆的思路，再深入快速选择，这是展示算法功底的经典题目。</p>
+</blockquote>
+
+    </div>
+  </div>
+  
+</body>
+</html>

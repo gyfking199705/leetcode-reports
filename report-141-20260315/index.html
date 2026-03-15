@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>#141 环形链表 | LeetCode 每日精讲</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      background: #f5f5f5;
+      line-height: 1.6;
+      color: #333;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .header h1 { font-size: 24px; }
+    .header a { color: white; text-decoration: none; }
+    .content {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .back-link {
+      display: inline-block;
+      color: #667eea;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .back-link:hover { text-decoration: underline; }
+    
+    /* Markdown styles */
+    .markdown-body h1 { font-size: 28px; border-bottom: 2px solid #e0e0e0; padding-bottom: 10px; margin-bottom: 20px; }
+    .markdown-body h2 { font-size: 22px; margin: 30px 0 15px; color: #444; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+    .markdown-body h3 { font-size: 18px; margin: 20px 0 10px; color: #555; }
+    .markdown-body p { margin: 15px 0; }
+    .markdown-body code {
+      background: #f4f4f4;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+      color: #e83e8c;
+    }
+    .markdown-body pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 15px 0;
+    }
+    .markdown-body pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+      font-size: 13px;
+    }
+    .markdown-body ul, .markdown-body ol { margin: 15px 0; padding-left: 25px; }
+    .markdown-body li { margin: 6px 0; }
+    .markdown-body blockquote {
+      border-left: 4px solid #667eea;
+      padding: 12px 15px;
+      margin: 15px 0;
+      color: #666;
+      background: #f8f8ff;
+      border-radius: 0 8px 8px 0;
+    }
+    .markdown-body table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    .markdown-body th, .markdown-body td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .markdown-body th { background: #f5f5f5; }
+    .markdown-body tr:nth-child(even) { background: #fafafa; }
+    
+    /* Home page styles */
+    .stats { display: flex; justify-content: center; gap: 40px; margin-top: 15px; }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 32px; font-weight: bold; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .report-card {
+      background: white;
+      border-radius: 10px;
+      padding: 18px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .report-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    .report-number {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .report-title { font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+    .report-date { font-size: 12px; color: #999; }
+    
+    @media (max-width: 768px) {
+      .content { padding: 20px; }
+      .markdown-body h1 { font-size: 22px; }
+      .markdown-body h2 { font-size: 18px; }
+      .report-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">
+      <h1><a href="./">🎯 LeetCode 每日精讲</a></h1>
+    </div>
+    <a href="./" class="back-link">← 返回报告列表</a>
+    <div class="content markdown-body">
+      <h2>🎯 LeetCode 精讲 #141 - 环形链表</h2>
+<hr>
+<h3>📋 题目描述</h3>
+<p><strong>来源</strong>: LeetCode 第141题<br><strong>难度</strong>: Easy<br><strong>链接</strong>: <a href="https://leetcode.cn/problems/linked-list-cycle/">https://leetcode.cn/problems/linked-list-cycle/</a></p>
+<h4>题目原文</h4>
+<blockquote>
+<p>给你一个链表的头节点 <code>head</code> ，判断链表中是否有环。</p>
+<p>如果链表中有某个节点，可以通过连续跟踪 <code>next</code> 指针再次到达，则链表中存在环。为了表示给定链表中的环，评测系统内部使用整数 <code>pos</code> 来表示链表尾连接到链表中的位置（索引从 0 开始）。<strong>注意：<code>pos</code> 不作为参数进行传递</strong>。仅仅是为了标识链表的实际情况。</p>
+<p>如果链表中存在环，则返回 <code>true</code> ；否则，返回 <code>false</code> 。</p>
+</blockquote>
+<h4>示例</h4>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: head = [3,2,0,-4], pos = 1
+输出: true
+解释: 链表中有一个环，其尾部连接到第二个节点。
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: head = [1,2], pos = 0
+输出: true
+解释: 链表中有一个环，其尾部连接到第一个节点。
+</code></pre>
+<p><strong>示例 3:</strong></p>
+<pre><code>输入: head = [1], pos = -1
+输出: false
+解释: 链表中没有环。
+</code></pre>
+<h4>约束条件</h4>
+<ul>
+<li>链表中节点的数目范围是 <code>[0, 10⁴]</code></li>
+<li><code>-10⁵ &lt;= Node.val &lt;= 10⁵</code></li>
+<li><code>pos</code> 为 <code>-1</code> 或者链表中的一个有效索引</li>
+</ul>
+<hr>
+<h3>💡 解题思路</h3>
+<h4>方法一：哈希表法（直观但非最优）</h4>
+<p><strong>核心思想</strong>: 遍历链表，用哈希表记录访问过的节点。如果再次遇到已访问的节点，说明有环。</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -&gt; bool:
+        visited = set()
+        current = head
+        
+        while current:
+            if current in visited:
+                return True  # 发现环！
+            visited.add(current)
+            current = current.next
+        
+        return False  # 遍历结束，无环
+</code></pre>
+<p><strong>复杂度分析</strong>:</p>
+<ul>
+<li><strong>时间复杂度</strong>: O(n) - 最坏情况遍历所有节点</li>
+<li><strong>空间复杂度</strong>: O(n) - 需要存储访问过的节点</li>
+</ul>
+<hr>
+<h4>方法二：快慢指针法（Floyd判圈算法）⭐ 推荐</h4>
+<p><strong>核心思想</strong>: 使用两个指针，慢指针每次走1步，快指针每次走2步。如果存在环，快指针最终会追上慢指针；如果无环，快指针会先到达末尾。</p>
+<p><strong>为什么快指针一定会追上慢指针？</strong></p>
+<p>想象一下操场跑步：</p>
+<ul>
+<li>慢指针速度: 1米/秒</li>
+<li>快指针速度: 2米/秒  </li>
+<li>相对速度: 1米/秒（快指针以每秒1米的速度接近慢指针）</li>
+</ul>
+<p>如果操场周长是C，快指针落后慢指针d米，那么经过d秒后，快指针就会追上慢指针。</p>
+<pre><code class="language-python"># Definition for singly-linked list.
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -&gt; bool:
+        # 边界情况：空链表或只有一个节点
+        if not head or not head.next:
+            return False
+        
+        # 初始化快慢指针
+        slow = head  # 慢指针，每次走1步
+        fast = head.next  # 快指针，每次走2步
+        
+        # 当快指针能继续前进时循环
+        while fast and fast.next:
+            if slow == fast:
+                return True  # 快慢指针相遇，有环！
+            
+            slow = slow.next       # 慢指针走1步
+            fast = fast.next.next  # 快指针走2步
+        
+        return False  # 快指针到达末尾，无环
+</code></pre>
+<p><strong>复杂度分析</strong>:</p>
+<ul>
+<li><strong>时间复杂度</strong>: O(n) - 无环时快指针到达末尾；有环时，快指针最多走2n步就会追上慢指针</li>
+<li><strong>空间复杂度</strong>: O(1) - 只使用了两个指针，常数额外空间</li>
+</ul>
+<hr>
+<h3>🔍 代码详解</h3>
+<h4>快慢指针执行过程可视化</h4>
+<p>假设链表: 3 → 2 → 0 → -4 → (回到2，形成环)</p>
+<pre><code>初始状态:
+slow → 3, fast → 2
+
+第1轮:
+slow: 3 → 2
+fast: 2 → 0 → -4
+状态: slow=2, fast=-4
+
+第2轮:
+slow: 2 → 0
+fast: -4 → 2 → 0  (绕了一圈)
+状态: slow=0, fast=0  ✨ 相遇！返回 True
+</code></pre>
+<h4>另一种初始化方式（更常见）</h4>
+<pre><code class="language-python">class Solution:
+    def hasCycle(self, head: Optional[ListNode]) -&gt; bool:
+        slow = fast = head  # 都从头部开始
+        
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+            if slow == fast:
+                return True
+        
+        return False
+</code></pre>
+<p><strong>注意</strong>: 这种写法第一次迭代就会比较（head == head.next，一般不会相等），需要多走一轮才能正确判断。</p>
+<hr>
+<h3>🎓 进阶知识</h3>
+<h4>1. 为什么快指针走2步，而不是3步、4步？</h4>
+<p>走2步是最优选择：</p>
+<ul>
+<li><strong>2步</strong>: 保证一定能相遇，且代码简洁</li>
+<li><strong>3步及以上</strong>: 仍能找到环，但可能跳过慢指针（需要更复杂的判断）</li>
+</ul>
+<h4>2. 如何找到环的入口？（LeetCode 142）</h4>
+<p>当快慢指针相遇后：</p>
+<ol>
+<li>将慢指针移回头部</li>
+<li>两个指针都以1步速度前进</li>
+<li>再次相遇的点就是环的入口</li>
+</ol>
+<p><strong>数学证明</strong>: 设环入口距离头部a步，相遇点距离入口b步，环长为c。</p>
+<ul>
+<li>慢指针走的距离: a + b</li>
+<li>快指针走的距离: a + b + kc (k圈)</li>
+<li>因为快指针是慢指针的2倍: 2(a+b) = a + b + kc</li>
+<li>化简: a = kc - b = (k-1)c + (c-b)</li>
+<li>结论: 从头部走a步 = 从相遇点走c-b步（即回到入口）</li>
+</ul>
+<pre><code class="language-python"># LeetCode 142 - 环形链表 II
+def detectCycle(self, head: Optional[ListNode]) -&gt; Optional[ListNode]:
+    slow = fast = head
+    
+    # 第一步：找相遇点
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            # 第二步：找入口
+            slow = head  # 慢指针回头部
+            while slow != fast:
+                slow = slow.next
+                fast = fast.next
+            return slow  # 相遇点就是入口
+    
+    return None  # 无环
+</code></pre>
+<h4>3. 如何计算环的长度？</h4>
+<p>找到相遇点后，让一个指针不动，另一个指针继续前进，再次回到该点所需的步数就是环长。</p>
+<hr>
+<h3>📚 类似题目</h3>
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>题目</th>
+<th>难度</th>
+<th>关联点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>142</strong></td>
+<td>环形链表 II</td>
+<td>中等</td>
+<td>找到环的入口节点</td>
+</tr>
+<tr>
+<td><strong>287</strong></td>
+<td>寻找重复数</td>
+<td>中等</td>
+<td>数组视为链表，用快慢指针</td>
+</tr>
+<tr>
+<td><strong>202</strong></td>
+<td>快乐数</td>
+<td>简单</td>
+<td>判断数字序列是否循环</td>
+</tr>
+<tr>
+<td><strong>457</strong></td>
+<td>环形数组是否存在循环</td>
+<td>中等</td>
+<td>数组索引跳跃，快慢指针</td>
+</tr>
+<tr>
+<td><strong>160</strong></td>
+<td>相交链表</td>
+<td>简单</td>
+<td>双指针技巧，链表对齐</td>
+</tr>
+</tbody></table>
+<h4>进阶学习路径</h4>
+<pre><code>环形链表(141) → 环形链表 II(142) → 寻找重复数(287)
+     │
+     └→ 快乐数(202) → 环形数组是否存在循环(457)
+</code></pre>
+<hr>
+<h3>💬 面试高频考点</h3>
+<p><strong>Q1: 快慢指针为什么一定能相遇？</strong><br>A: 如果存在环，快指针相对慢指针以1步/轮的速度追赶，环的长度是有限的，所以一定能在某轮追上。</p>
+<p><strong>Q2: 相遇时慢指针一定没有走完一圈吗？</strong><br>A: 是的。快指针速度是慢指针的2倍，当慢指针进入环后，快指针最多落后一圈，在慢指针走完第一圈之前就会被追上。</p>
+<p><strong>Q3: 为什么空间复杂度是O(1)？</strong><br>A: 只用了slow和fast两个指针，不随链表长度增加而增加额外空间。</p>
+<p><strong>Q4: 如果要求找到环的长度，怎么做？</strong><br>A: 相遇后，让一个指针不动，另一个指针继续走，统计再次回到该点的步数。</p>
+<hr>
+<h3>🎯 总结</h3>
+<p>LeetCode 141 是理解**快慢指针（Floyd判圈算法）**的经典入门题。</p>
+<p><strong>核心要点</strong>:</p>
+<ol>
+<li>快慢指针是解决链表环问题的标准方法</li>
+<li>快指针每次走2步，慢指针每次走1步</li>
+<li>相遇则有环，快指针到达末尾则无环</li>
+<li>时间O(n)，空间O(1)，非常高效</li>
+</ol>
+<p><strong>面试建议</strong>: 先讲哈希表解法展示思路，然后优化到快慢指针展示算法功底。如果面试官追问，可以顺势展开到142题的环入口查找。</p>
+<hr>
+<p><em>生成时间: 2026-03-15 11:46</em><br><em>题号: #141 - 环形链表</em></p>
+
+    </div>
+  </div>
+  
+</body>
+</html>
