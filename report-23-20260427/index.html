@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode 23 - 合并K个升序链表 | 精讲报告</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --accent-soft: #1f6feb;
+            --success: #3fb950;
+            --warning: #d29922;
+            --danger: #f85149;
+            --hard: #f85149;
+            --medium: #d29922;
+            --easy: #3fb950;
+            --code-bg: #0d1117;
+            --shadow: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 0;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+        .header {
+            text-align: center;
+            padding: 48px 0 32px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+        .tag-hard { background: rgba(248,81,73,0.15); color: var(--hard); border: 1px solid rgba(248,81,73,0.3); }
+        .tag-medium { background: rgba(210,153,34,0.15); color: var(--medium); border: 1px solid rgba(210,153,34,0.3); }
+        .tag-easy { background: rgba(63,185,80,0.15); color: var(--easy); border: 1px solid rgba(63,185,80,0.3); }
+        .header h1 { font-size: 36px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .header .subtitle { color: var(--text-secondary); font-size: 16px; }
+        .meta-bar {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .meta-bar span { display: flex; align-items: center; gap: 6px; }
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            transition: border-color 0.2s;
+        }
+        .section:hover { border-color: var(--accent-soft); }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent);
+        }
+        .section-title .icon { font-size: 22px; }
+        .problem-desc {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent);
+            padding: 20px 24px;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0;
+            font-size: 15px;
+        }
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover { background: var(--accent-soft); color: white; border-color: var(--accent-soft); }
+        pre {
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: var(--text);
+        }
+        .hljs-keyword { color: #ff7b72; }
+        .hljs-type { color: #ffa657; }
+        .hljs-variable { color: #79c0ff; }
+        .hljs-function { color: #d2a8ff; }
+        .hljs-string { color: #a5d6ff; }
+        .hljs-number { color: #79c0ff; }
+        .hljs-comment { color: #8b949e; font-style: italic; }
+        .complexity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .complexity-card {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: center;
+        }
+        .complexity-card .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+        .complexity-card .value { font-size: 24px; font-weight: 700; color: var(--accent); }
+        .approach-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .approach-tab {
+            padding: 8px 18px;
+            border-radius: 8px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .approach-tab.active {
+            background: var(--accent-soft);
+            color: white;
+            border-color: var(--accent-soft);
+        }
+        .approach-tab:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+        .approach-content { display: none; }
+        .approach-content.active { display: block; }
+        .insight-box {
+            background: rgba(88,166,255,0.08);
+            border: 1px solid rgba(88,166,255,0.2);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 16px 0;
+        }
+        .insight-box .title {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .steps-list {
+            list-style: none;
+            counter-reset: step;
+        }
+        .steps-list li {
+            position: relative;
+            padding-left: 36px;
+            margin-bottom: 14px;
+            font-size: 15px;
+        }
+        .steps-list li::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .visual-diagram {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+        .visual-diagram .node {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 6px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            margin: 0 2px;
+            color: var(--text);
+        }
+        .visual-diagram .arrow { color: var(--accent); margin: 0 4px; }
+        .visual-diagram .highlight { color: var(--accent); font-weight: 600; }
+        .footer {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
+        }
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        .compare-table th {
+            background: var(--bg-tertiary);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent);
+            border-bottom: 2px solid var(--border);
+        }
+        .compare-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+        .compare-table tr:hover td { background: rgba(88,166,255,0.03); }
+        .pill {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .pill-time { background: rgba(63,185,80,0.15); color: var(--success); }
+        .pill-space { background: rgba(210,153,34,0.15); color: var(--warning); }
+        .pill-bad { background: rgba(248,81,73,0.15); color: var(--danger); }
+        @media (max-width: 640px) {
+            .complexity-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 26px; }
+            .section { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <span class="tag tag-hard">Hard</span>
+            <h1>23. 合并K个升序链表</h1>
+            <p class="subtitle">Merge k Sorted Lists — 链表 · 分治 · 堆</p>
+            <div class="meta-bar">
+                <span>📅 2026-04-27</span>
+                <span>🏷️ 链表 / 堆 / 分治</span>
+                <span>⏱️ 预计 25 分钟掌握</span>
+            </div>
+        </div>
+
+        <!-- 题目描述 -->
+        <div class="section">
+            <div class="section-title"><span class="icon">📋</span> 题目描述</div>
+            <div class="problem-desc">
+                <p>给你一个链表数组，每个链表都已经按升序排列。</p>
+                <p style="margin-top:10px"><strong>请你将所有链表合并到一个升序链表中并返回。</strong></p>
+            </div>
+            <div class="code-block">
+                <div class="code-header">示例</div>
+                <pre><span class="hljs-comment">// 输入</span>
+lists = [
+  [<span class="hljs-number">1</span>-><span class="hljs-number">4</span>-><span class="hljs-number">5</span>],
+  [<span class="hljs-number">1</span>-><span class="hljs-number">3</span>-><span class="hljs-number">4</span>],
+  [<span class="hljs-number">2</span>-><span class="hljs-number">6</span>]
+]
+
+<span class="hljs-comment">// 输出</span>
+[<span class="hljs-number">1</span>-><span class="hljs-number">1</span>-><span class="hljs-number">2</span>-><span class="hljs-number">3</span>-><span class="hljs-number">4</span>-><span class="hljs-number">4</span>-><span class="hljs-number">5</span>-><span class="hljs-number">6</span>]</pre>
+            </div>
+            <div class="insight-box">
+                <div class="title">💡 核心观察</div>
+                <p>这题是 <strong>21. 合并两个有序链表</strong> 的升级版。k=2 时就是两链表合并，k 很大时需要更高效的策略。关键是<strong>如何快速找到当前所有链表头节点中的最小值</strong>。</p>
+            </div>
+        </div>
+
+        <!-- 解法对比 -->
+        <div class="section">
+            <div class="section-title"><span class="icon">⚖️</span> 三种解法对比</div>
+            <table class="compare-table">
+                <tr><th>方法</th><th>时间</th><th>空间</th><th>核心思想</th></tr>
+                <tr>
+                    <td><strong>逐一合并</strong></td>
+                    <td><span class="pill pill-bad">O(k²n)</span></td>
+                    <td><span class="pill pill-time">O(1)</span></td>
+                    <td>用合并两个链表的函数，逐个合并 k 个链表</td>
+                </tr>
+                <tr>
+                    <td><strong>分治合并</strong></td>
+                    <td><span class="pill pill-time">O(kn·log k)</span></td>
+                    <td><span class="pill pill-time">O(log k)</span></td>
+                    <td>两两配对，递归合并，类似归并排序</td>
+                </tr>
+                <tr>
+                    <td><strong>优先队列</strong> ⭐</td>
+                    <td><span class="pill pill-time">O(kn·log k)</span></td>
+                    <td><span class="pill pill-space">O(k)</span></td>
+                    <td>小根堆维护 k 个链表头，每次取最小</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- 交互式解法 -->
+        <div class="section">
+            <div class="section-title"><span class="icon">🔧</span> 解法精讲</div>
+            <div class="approach-tabs">
+                <div class="approach-tab active" onclick="switchTab(0)">逐一合并</div>
+                <div class="approach-tab" onclick="switchTab(1)">分治合并 ⭐</div>
+                <div class="approach-tab" onclick="switchTab(2)">优先队列 ⭐⭐</div>
+            </div>
+
+            <!-- 逐一合并 -->
+            <div class="approach-content active">
+                <p>最直观的方法：维护一个结果链表，依次与每个输入链表合并。</p>
+                <div class="visual-diagram">
+                    <span class="highlight">result</span> <span class="arrow">← merge →</span> <span class="node">list[0]</span><br>
+                    <span class="highlight">result</span> <span class="arrow">← merge →</span> <span class="node">list[1]</span><br>
+                    <span class="highlight">result</span> <span class="arrow">← merge →</span> <span class="node">list[2]</span><br>
+                    ... 共 k 次合并
+                </div>
+                <div class="insight-box">
+                    <div class="title">⚠️ 为什么慢？</div>
+                    <p>第一次合并：合并 n + n = 2n 个节点<br>
+                    第二次合并：合并 2n + n = 3n 个节点<br>
+                    ...<br>
+                    第 i 次合并：合并 i·n + n 个节点<br><br>
+                    总节点访问次数 = 2n + 3n + ... + kn = <strong>n·(k+2)(k-1)/2 ≈ O(k²n)</strong></p>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>逐一合并 · Python</span>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
+                    <pre><span class="hljs-keyword">class</span> <span class="hljs-type">Solution</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-function">mergeKLists</span>(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> lists:
+            <span class="hljs-keyword">return</span> <span class="hljs-variable">None</span>
+        
+        <span class="hljs-comment"># 复用合并两个链表的函数</span>
+        <span class="hljs-keyword">def</span> <span class="hljs-function">mergeTwo</span>(l1, l2):
+            dummy = ListNode(<span class="hljs-number">0</span>)
+            tail = dummy
+            <span class="hljs-keyword">while</span> l1 <span class="hljs-keyword">and</span> l2:
+                <span class="hljs-keyword">if</span> l1.val <= l2.val:
+                    tail.next = l1
+                    l1 = l1.next
+                <span class="hljs-keyword">else</span>:
+                    tail.next = l2
+                    l2 = l2.next
+                tail = tail.next
+            tail.next = l1 <span class="hljs-keyword">if</span> l1 <span class="hljs-keyword">else</span> l2
+            <span class="hljs-keyword">return</span> dummy.next
+        
+        <span class="hljs-comment"># 逐个合并</span>
+        result = lists[<span class="hljs-number">0</span>]
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-function">range</span>(<span class="hljs-number">1</span>, <span class="hljs-function">len</span>(lists)):
+            result = mergeTwo(result, lists[i])
+        <span class="hljs-keyword">return</span> result</pre>
+                </div>
+            </div>
+
+            <!-- 分治合并 -->
+            <div class="approach-content">
+                <p>类似<strong>归并排序</strong>的分治策略：将 k 个链表两两配对合并，递归处理直到只剩一个链表。</p>
+                <div class="visual-diagram">
+                    <span class="node">l0</span> <span class="node">l1</span> <span class="node">l2</span> <span class="node">l3</span> <span class="node">l4</span> <span class="node">l5</span> <span class="node">l6</span> <span class="node">l7</span><br><br>
+                    <span class="arrow">↘ merge ↙</span> &nbsp;&nbsp; <span class="arrow">↘ merge ↙</span> &nbsp;&nbsp; <span class="arrow">↘ merge ↙</span> &nbsp;&nbsp; <span class="arrow">↘ merge ↙</span><br>
+                    <span class="highlight">m0</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="highlight">m1</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="highlight">m2</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="highlight">m3</span><br><br>
+                    <span class="arrow">↘ merge ↙</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="arrow">↘ merge ↙</span><br>
+                    <span class="highlight">mm0</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span class="highlight">mm1</span><br><br>
+                    <span class="arrow">↘ merge ↙</span><br>
+                    <span class="highlight" style="font-size:16px">RESULT</span>
+                </div>
+                <div class="insight-box">
+                    <div class="title">💡 为什么快？</div>
+                    <p>每次合并的链表长度相近，避免了"一长一短"的低效情况。<br><br>
+                    层数 = log₂k，每层访问总节点数 = O(kn)<br>
+                    总复杂度 = <strong>O(kn · log k)</strong></p>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>分治合并 · Python</span>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
+                    <pre><span class="hljs-keyword">class</span> <span class="hljs-type">Solution</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-function">mergeKLists</span>(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> lists:
+            <span class="hljs-keyword">return</span> <span class="hljs-variable">None</span>
+        <span class="hljs-keyword">return</span> self.<span class="hljs-function">mergeRange</span>(lists, <span class="hljs-number">0</span>, <span class="hljs-function">len</span>(lists) - <span class="hljs-number">1</span>)
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-function">mergeRange</span>(self, lists, left, right):
+        <span class="hljs-keyword">if</span> left == right:
+            <span class="hljs-keyword">return</span> lists[left]
+        <span class="hljs-keyword">if</span> left + <span class="hljs-number">1</span> == right:
+            <span class="hljs-keyword">return</span> self.<span class="hljs-function">mergeTwo</span>(lists[left], lists[right])
+        
+        mid = (left + right) // <span class="hljs-number">2</span>
+        l1 = self.<span class="hljs-function">mergeRange</span>(lists, left, mid)
+        l2 = self.<span class="hljs-function">mergeRange</span>(lists, mid + <span class="hljs-number">1</span>, right)
+        <span class="hljs-keyword">return</span> self.<span class="hljs-function">mergeTwo</span>(l1, l2)
+    
+    <span class="hljs-keyword">def</span> <span class="hljs-function">mergeTwo</span>(self, l1, l2):
+        dummy = ListNode(<span class="hljs-number">0</span>)
+        tail = dummy
+        <span class="hljs-keyword">while</span> l1 <span class="hljs-keyword">and</span> l2:
+            <span class="hljs-keyword">if</span> l1.val <= l2.val:
+                tail.next, l1 = l1, l1.next
+            <span class="hljs-keyword">else</span>:
+                tail.next, l2 = l2, l2.next
+            tail = tail.next
+        tail.next = l1 <span class="hljs-keyword">if</span> l1 <span class="hljs-keyword">else</span> l2
+        <span class="hljs-keyword">return</span> dummy.next</pre>
+                </div>
+            </div>
+
+            <!-- 优先队列 -->
+            <div class="approach-content">
+                <p>最优面试解法。维护一个<strong>大小为 k 的小根堆</strong>，存储每个链表的当前头节点。每次从堆顶取出最小节点接到结果链表，并将该节点的下一个节点入堆。</p>
+                <div class="visual-diagram">
+                    <span class="highlight">Min-Heap (size=k)</span><br><br>
+                    ┌─────┐<br>
+                    │ <span class="highlight">1</span> ←─┼── list[0]: [1→4→5]<br>
+                    │  2  │ &nbsp;&nbsp; list[1]: [2→6]<br>
+                    │  3  │ &nbsp;&nbsp; list[2]: [3→7]<br>
+                    └─────┘<br><br>
+                    取出 <span class="highlight">1</span> → result.next = 1<br>
+                    将 <span class="highlight">4</span> 入堆<br><br>
+                    ┌─────┐<br>
+                    │ <span class="highlight">2</span> ←─┼── ...<br>
+                    │  3  │<br>
+                    │  4  │<br>
+                    └─────┘
+                </div>
+                <div class="insight-box">
+                    <div class="title">🎯 堆操作复杂度</div>
+                    <p>每次取最小 + 插入新节点 = <strong>O(log k)</strong><br>
+                    总共处理 kn 个节点<br>
+                    总复杂度 = <strong>O(kn · log k)</strong><br><br>
+                    Python 用 <code>heapq</code>，但需要自定义比较（因为直接比较 ListNode 会报错）。技巧：存入 <code>(node.val, idx, node)</code> 三元组。</p>
+                </div>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>优先队列 · Python（最优解）</span>
+                        <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    </div>
+                    <pre><span class="hljs-keyword">import</span> heapq
+
+<span class="hljs-keyword">class</span> <span class="hljs-type">Solution</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-function">mergeKLists</span>(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        dummy = ListNode(<span class="hljs-number">0</span>)
+        tail = dummy
+        
+        <span class="hljs-comment"># 最小堆: (值, 索引, 节点)</span>
+        <span class="hljs-comment"># 索引用于打破平局，避免比较 ListNode</span>
+        min_heap = []
+        <span class="hljs-keyword">for</span> i, node <span class="hljs-keyword">in</span> <span class="hljs-function">enumerate</span>(lists):
+            <span class="hljs-keyword">if</span> node:
+                heapq.<span class="hljs-function">heappush</span>(min_heap, (node.val, i, node))
+        
+        <span class="hljs-keyword">while</span> min_heap:
+            val, idx, node = heapq.<span class="hljs-function">heappop</span>(min_heap)
+            tail.next = node
+            tail = tail.next
+            <span class="hljs-keyword">if</span> node.next:
+                heapq.<span class="hljs-function">heappush</span>(min_heap, (node.next.val, idx, node.next))
+        
+        <span class="hljs-keyword">return</span> dummy.next</pre>
+                </div>
+                <div class="insight-box">
+                    <div class="title">📝 关键点</div>
+                    <p>1. <strong>dummy 节点</strong>：简化头节点处理，最后返回 <code>dummy.next</code><br>
+                    2. <strong>三元组入堆</strong>：<code>heapq</code> 比较元素时若值相同会接着比较下一个元素，ListNode 不可比较所以放索引 <code>i</code> 作为 tie-breaker<br>
+                    3. <strong>空链表过滤</strong>：入堆前判断 <code>if node</code>，避免空指针<br>
+                    4. <strong>空间</strong>：堆大小不超过 k，空间复杂度 O(k)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 面试要点 -->
+        <div class="section">
+            <div class="section-title"><span class="icon">🎤</span> 面试要点</div>
+            <ol class="steps-list">
+                <li><strong>先问边界</strong>：k=0 怎么办？有空链表怎么办？答：返回 None</li>
+                <li><strong>先给暴力</strong>：逐一合并 O(k²n)，展示基础能力</li>
+                <li><strong>再优化</strong>：提到归并思路或堆，这才是面试官想听的</li>
+                <li><strong>讲清复杂度</strong>：分治和堆都是 O(kn·log k)，分治空间 O(log k) 更优，堆实现更短</li>
+                <li><strong>手写 mergeTwo</strong>：dummy + tail 双指针，烂熟于心</li>
+                <li><strong>Python 细节</strong>：heapq 不能直接存 ListNode，要包装成 (val, idx, node)</li>
+            </ol>
+        </div>
+
+        <!-- 复杂度总结 -->
+        <div class="section">
+            <div class="section-title"><span class="icon">📊</span> 复杂度速查</div>
+            <div class="complexity-grid">
+                <div class="complexity-card">
+                    <div class="label">最优时间复杂度</div>
+                    <div class="value">O(kn·log k)</div>
+                </div>
+                <div class="complexity-card">
+                    <div class="label">最优空间复杂度</div>
+                    <div class="value">O(log k)</div>
+                </div>
+            </div>
+            <p style="margin-top:16px; color:var(--text-secondary); font-size:14px;">
+                注：n 为单个链表平均长度，k 为链表数量。分治法空间为递归栈 O(log k)，堆方法空间为 O(k)。
+            </p>
+        </div>
+
+        <!-- 相关题目 -->
+        <div class="section">
+            <div class="section-title"><span class="icon">🔗</span> 相关题目</div>
+            <ul style="list-style:none; font-size:15px;">
+                <li style="margin-bottom:10px;">• <strong>21. 合并两个有序链表</strong> — 这题的直接基础，必须熟练</li>
+                <li style="margin-bottom:10px;">• <strong>148. 排序链表</strong> — 分治 + 链表，思路高度相似</li>
+                <li style="margin-bottom:10px;">• <strong>264. 丑数 II</strong> — 多路归并（三个指针），思想同源</li>
+                <li>• <strong>373. 查找和最小的 K 对数字</strong> — 优先队列经典题</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>LeetCode 每日精讲 · 第239期 · 2026-04-27</p>
+            <p style="margin-top:6px; opacity:0.6;">坚持每日一题，时间会站在你这边。</p>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(index) {
+            document.querySelectorAll('.approach-tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.approach-content').forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            const text = pre.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '已复制!';
+                setTimeout(() => btn.textContent = '复制', 1500);
+            });
+        }
+    </script>
+</body>
+</html>
