@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeetCode 105 · 从前序与中序遍历序列构造二叉树</title>
+<style>
+:root{--bg:#0d1117;--card:#161b22;--border:#30363d;--text:#c9d1d9;--muted:#8b949e;--accent:#58a6ff;--accent2:#3fb950;--accent3:#f0883e;--danger:#f85149;--warn:#d29922;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.7;max-width:900px;margin:0 auto;padding:24px 16px}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.badge-medium{background:rgba(210,153,34,.15);color:var(--warn);border:1px solid rgba(210,153,34,.3)}
+.badge-hard{background:rgba(248,81,73,.15);color:var(--danger);border:1px solid rgba(248,81,73,.3)}
+.badge-easy{background:rgba(63,185,80,.15);color:var(--accent2);border:1px solid rgba(63,185,80,.3)}
+header{margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+header h1{font-size:26px;font-weight:700;margin-bottom:8px;letter-spacing:-.3px}
+header .meta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;transition:transform .15s}
+.card:hover{transform:translateY(-1px)}
+.card h2{font-size:18px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--accent)}
+.card h3{font-size:15px;font-weight:600;margin:16px 0 8px;color:var(--text)}
+.collapsible{cursor:pointer;user-select:none}
+.collapsible::after{content:"▸";margin-left:auto;font-size:12px;transition:transform .2s;display:inline-block}
+.collapsible.open::after{transform:rotate(90deg)}
+.content{display:none;padding-top:12px}
+.content.show{display:block;animation:fadeIn .25s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+pre{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow-x:auto;font-size:13px;line-height:1.6;margin:10px 0}
+code{font-family:"SF Mono",Monaco,Inconsolata,"Fira Code",monospace;color:#e6edf3}
+.keyword{color:#ff7b72}.string{color:#a5d6ff}.comment{color:#8b949e;font-style:italic}.function{color:#d2a8ff}.number{color:#79c0ff}.type{color:#ffa657}
+ul,ol{margin-left:20px;margin-bottom:12px}li{margin-bottom:6px}
+.tip{background:rgba(88,166,255,.08);border-left:3px solid var(--accent);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:14px}
+.warn-tip{background:rgba(210,153,34,.08);border-left-color:var(--warn)}
+.danger-tip{background:rgba(248,81,73,.08);border-left-color:var(--danger)}
+.success-tip{background:rgba(63,185,80,.08);border-left-color:var(--accent2)}
+.tag{display:inline-block;background:rgba(88,166,255,.1);color:var(--accent);padding:2px 8px;border-radius:6px;font-size:12px;margin:2px 4px 2px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:500;font-size:12px;text-transform:uppercase;letter-spacing:.3px}
+.step-box{background:rgba(88,166,255,.05);border:1px dashed var(--border);border-radius:10px;padding:16px;margin:10px 0}
+.step-box .num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--accent);color:#fff;border-radius:50%;font-size:12px;font-weight:700;margin-right:8px}
+.interactive-demo{padding:16px;background:#0a0e14;border:1px solid var(--border);border-radius:10px;margin:12px 0}
+.btn{background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;margin:2px;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-secondary{background:var(--border);color:var(--text)}
+.tree-viz{font-family:monospace;color:var(--muted);line-height:1.4;white-space:pre;margin:10px 0}
+.progress-container{display:flex;align-items:center;gap:12px;margin:16px 0;font-size:13px}
+.progress-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--accent2);border-radius:3px;transition:width .3s}
+.footer{margin-top:32px;padding-top:20px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:12px}
+.mermaid-like{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 0;font-family:monospace;font-size:14px}
+.box{padding:8px 14px;border:1px solid var(--border);border-radius:6px;background:var(--card);min-width:50px;text-align:center}
+.arrow{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1>LeetCode 105 · 从前序与中序遍历序列构造二叉树</h1>
+      <div class="meta">
+        <span class="badge badge-medium">Medium</span>
+        <span>题号 105</span>
+        <span>•</span>
+        <span>递归 / 分治 / 哈希表</span>
+        <span>•</span>
+        <span>2026-04-29 00:06</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="card">
+  <h2>🎯 题目描述</h2>
+  <p>给定一棵树的前序遍历 <code>preorder</code> 与中序遍历 <code>inorder</code>，请构造这棵二叉树并返回其根节点。</p>
+  <div class="tip">
+    <strong>核心前提：</strong>假设树中没有重复元素。（若有重复元素，则无法唯一确定结构）
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="collapsible">💡 核心思路（点击展开）</h2>
+  <div class="content">
+    <p>前序遍历的顺序是 <strong>根 → 左 → 右</strong>，中序遍历的顺序是 <strong>左 → 根 → 右</strong>。</p>
+    <div class="step-box">
+      <span class="num">1</span><strong>定位根节点</strong>：前序数组的第一个元素就是整棵树的根。
+    </div>
+    <div class="step-box">
+      <span class="num">2</span><strong>分割中序</strong>：在中序数组中找到根的位置，左边全部是左子树，右边全部是右子树。
+    </div>
+    <div class="step-box">
+      <span class="num">3</span><strong>递归构造</strong>：根据左子树的节点数量，将前序数组也切成左右两部分，递归构建左右子树。
+    </div>
+    <div class="tip success-tip">
+      <strong>哈希表加速：</strong>在中序数组中查找根节点位置若用线性扫描，每次O(n)，总O(n²)。预先用哈希表存储值→索引的映射，查找降至O(1)，总时间O(n)。
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="collapsible">🔍 图解示例（点击展开）</h2>
+  <div class="content">
+    <p style="margin-bottom:12px"><strong>示例：</strong>preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]</p>
+    <div class="mermaid-like">
+      <div>
+        <div class="box" style="border-color:var(--accent)">pre[0]=3<br><small style="color:var(--accent)">← 根</small></div>
+      </div>
+    </div>
+    <p>在中序中找到 3 的位置：inorder = [<span style="color:var(--accent2)">9</span>, <span style="color:var(--accent);font-weight:700">3</span>, <span style="color:var(--accent3)">15,20,7</span>]</p>
+    <ul>
+      <li>左子树中序：[9] → 1个节点</li>
+      <li>右子树中序：[15,20,7] → 3个节点</li>
+    </ul>
+    <p>前序数组相应分割：preorder = [<span style="color:var(--accent);font-weight:700">3</span>, <span style="color:var(--accent2)">9</span>, <span style="color:var(--accent3)">20,15,7</span>]</p>
+    <ul>
+      <li>左子树前序：[9]（取接下来的1个）</li>
+      <li>右子树前序：[20,15,7]（取接下来的3个）</li>
+    </ul>
+    <div class="tree-viz">
+       3
+      / \
+     9  20
+       /  \
+      15   7
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="collapsible">🐍 Python 代码实现（点击展开）</h2>
+  <div class="content">
+    <h3>最优解：哈希表 + 递归（O(n) 时间）</h3>
+<pre><code><span class="comment"># Definition for a binary tree node.</span>
+<span class="keyword">class</span> <span class="type">TreeNode</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, val=<span class="number">0</span>, left=<span class="keyword">None</span>, right=<span class="keyword">None</span>):
+        self.val = val
+        self.left = left
+        self.right = right
+
+<span class="keyword">class</span> <span class="type">Solution</span>:
+    <span class="keyword">def</span> <span class="function">buildTree</span>(self, preorder: List[<span class="type">int</span>], inorder: List[<span class="type">int</span>]) -> Optional[TreeNode]:
+        <span class="comment"># 建立中序值 → 索引的映射，O(1) 查找</span>
+        index_map = {val: idx <span class="keyword">for</span> idx, val <span class="keyword">in</span> enumerate(inorder)}
+        
+        <span class="comment"># pre_idx 用 nonlocal 追踪前序中的当前根位置</span>
+        self.pre_idx = <span class="number">0</span>
+        
+        <span class="keyword">def</span> <span class="function">helper</span>(in_left, in_right):
+            <span class="comment"># 中序区间无效，说明无节点</span>
+            <span class="keyword">if</span> in_left > in_right:
+                <span class="keyword">return</span> <span class="keyword">None</span>
+            
+            <span class="comment"># 前序当前元素作为根</span>
+            root_val = preorder[self.pre_idx]
+            root = TreeNode(root_val)
+            self.pre_idx += <span class="number">1</span>
+            
+            <span class="comment"># 在中序中定位根，分割左右子树</span>
+            in_root_idx = index_map[root_val]
+            
+            <span class="comment"># 必须先构建左子树！前序是根→左→右</span>
+            root.left = helper(in_left, in_root_idx - <span class="number">1</span>)
+            root.right = helper(in_root_idx + <span class="number">1</span>, in_right)
+            
+            <span class="keyword">return</span> root
+        
+        <span class="keyword">return</span> helper(<span class="number">0</span>, len(inorder) - <span class="number">1</span>)</code></pre>
+
+    <h3>切片写法（简洁但不推荐，空间 O(n²)）</h3>
+<pre><code><span class="keyword">class</span> <span class="type">Solution</span>:
+    <span class="keyword">def</span> <span class="function">buildTree</span>(self, preorder: List[<span class="type">int</span>], inorder: List[<span class="type">int</span>]) -> Optional[TreeNode]:
+        <span class="keyword">if</span> <span class="keyword">not</span> preorder:
+            <span class="keyword">return</span> <span class="keyword">None</span>
+        
+        root_val = preorder[<span class="number">0</span>]
+        root = TreeNode(root_val)
+        idx = inorder.index(root_val)  <span class="comment"># O(n) 查找</span>
+        
+        <span class="comment"># 切片产生新数组，浪费空间</span>
+        root.left = self.buildTree(preorder[<span class="number">1</span>:<span class="number">1</span>+idx], inorder[:idx])
+        root.right = self.buildTree(preorder[<span class="number">1</span>+idx:], inorder[idx+<span class="number">1</span>:])
+        
+        <span class="keyword">return</span> root</code></pre>
+    <div class="tip danger-tip">
+      <strong>⚠️ 注意顺序：</strong>递归中必须先构建 <code>left</code> 再构建 <code>right</code>，因为前序遍历是「根→左→右」，<code>pre_idx</code> 指针必须按这个顺序消费元素。
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="collapsible">📊 复杂度分析（点击展开）</h2>
+  <div class="content">
+    <table>
+      <tr><th>指标</th><th>哈希表优化版</th><th>切片版</th></tr>
+      <tr><td>时间复杂度</td><td><span style="color:var(--accent2)">O(n)</span></td><td>O(n²) — 每次 index() + 切片</td></tr>
+      <tr><td>空间复杂度</td><td>O(n) — 哈希表 + 递归栈</td><td>O(n²) — 大量切片新数组</td></tr>
+      <tr><td>递归深度</td><td>O(h)，h 为树高度</td><td>同左</td></tr>
+      <tr><td>最坏情况</td><td>链表形态时 O(n) 栈深</td><td>同左，且空间爆炸</td></tr>
+    </table>
+    <div class="tip">
+      <strong>面试建议：</strong>先写切片版的思路，展示理解；然后主动提出用索引范围 + 哈希表优化到 O(n)，这是加分项。
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="collapsible">🎤 面试连环追问（点击展开）</h2>
+  <div class="content">
+    <div class="step-box">
+      <span class="num">Q1</span><strong>如果有重复元素怎么办？</strong><br>
+      无法唯一确定。需要额外信息，如前序+后序无法区分左右子树只有单节点的情况；或者给定 null 标记的序列化。
+    </div>
+    <div class="step-box">
+      <span class="num">Q2</span><strong>只用前序+后序能构造吗？</strong><br>
+      不能唯一确定。当某个节点只有一棵子树时，无法判断是左还是右。例如 pre=[1,2], post=[2,1] 可以是 1→left→2 也可以是 1→right→2。
+    </div>
+    <div class="step-box">
+      <span class="num">Q3</span><strong>如何迭代实现？</strong><br>
+      可以用栈模拟递归。维护当前处理的根节点，根据中序遍历的指针判断下一个前序元素是左孩子还是右兄弟。思路较复杂，面试中提及即可。
+    </div>
+    <div class="step-box">
+      <span class="num">Q4</span><strong>空间能优化到 O(h) 吗？</strong><br>
+      如果不用哈希表，每次在中序中线性查找根节点，时间退化为 O(n²)，空间为 O(h)。trade-off 问题，通常不这么做。
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 class="collapsible">🧠 记忆口诀（点击展开）</h2>
+  <div class="content">
+    <div class="tip success-tip" style="font-size:16px;text-align:center">
+      <strong>「前序找根，中序分左右，先左后右，递归到底」</strong>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:14px">面试现场卡壳时默念一遍，框架立刻清晰。</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>📌 一句话总结</h2>
+  <p>这道题是<strong>递归分治</strong>在二叉树上的经典应用。抓住「前序定根、中序分左右」的本质，配合哈希表将中序查找优化到 O(1)，即可在 O(n) 时间内重建整棵树。关键是递归时<strong>必须先左后右</strong>，因为前序遍历的顺序约束了子树的消费次序。</p>
+  <div style="margin-top:12px">
+    <span class="tag">递归</span>
+    <span class="tag">分治</span>
+    <span class="tag">哈希表</span>
+    <span class="tag">二叉树</span>
+    <span class="tag">前序遍历</span>
+    <span class="tag">中序遍历</span>
+    <span class="tag">面试高频</span>
+  </div>
+</div>
+
+<div class="footer">
+  LeetCode 每日精讲 · 第 246 期 · 2026-04-29<br>
+   generated by Kimi Claw
+</div>
+
+<script>
+document.querySelectorAll('.collapsible').forEach(el=>{
+  el.addEventListener('click',()=>{
+    const content=el.nextElementSibling;
+    el.classList.toggle('open');
+    content.classList.toggle('show');
+  });
+});
+// 默认展开前两个
+setTimeout(()=>{
+  document.querySelectorAll('.collapsible').forEach((el,i)=>{
+    if(i<2){el.click();}
+  });
+},100);
+</script>
+</body>
+</html>
